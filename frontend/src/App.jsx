@@ -126,7 +126,7 @@ export default function App() {
           />
         )}
         {activeTab === 'homework' && (
-          <HomeworkTab homeworkList={homeworkList} />
+          <HomeworkTab homeworkList={homeworkList} timetable={timetable} />
         )}
         {activeTab === 'timetable' && (
           <TimetableTab timetable={timetable} />

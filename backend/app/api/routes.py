@@ -13,6 +13,9 @@ _LOGGER = logging.getLogger(__name__)
 router = APIRouter(prefix="/api", tags=["MiniApp"])
 
 
+CURRENT_CACHE_VERSION = 2
+
+
 async def get_user_data(telegram_id: int, force_refresh: bool = False) -> Dict[str, Any]:
     user = await get_user(telegram_id)
     if not user:
@@ -24,7 +27,10 @@ async def get_user_data(telegram_id: int, force_refresh: bool = False) -> Dict[s
     cached_json = user.get("cached_data")
     if cached_json and not force_refresh:
         try:
-            return json.loads(cached_json)
+            cached_data = json.loads(cached_json)
+            # If cache has current version and absences have been checked, return it
+            if cached_data.get("_v", 0) >= CURRENT_CACHE_VERSION:
+                return cached_data
         except Exception:
             pass
 
@@ -36,6 +42,7 @@ async def get_user_data(telegram_id: int, force_refresh: bool = False) -> Dict[s
     try:
         fresh = await client.fetch_data()
         fresh_dict = fresh.to_dict()
+        fresh_dict["_v"] = CURRENT_CACHE_VERSION
         await update_cached_data(telegram_id, fresh_dict)
         return fresh_dict
     except Exception as e:

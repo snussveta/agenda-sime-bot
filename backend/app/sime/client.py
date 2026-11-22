@@ -22,6 +22,7 @@ from .parser import (
     parse_calendar_events,
     parse_homework,
     parse_recent_grades,
+    parse_semester_absences,
     parse_semester_grades_table,
     parse_student_dashboard,
 )
@@ -147,6 +148,19 @@ class SimeClient:
                                     if subj_data.semester_grade is not None:
                                         subjects[subj_name].semester_grade = subj_data.semester_grade
                                     subjects[subj_name].average = subjects[subj_name].calculate_average()
+
+                            # Parse semester absences from report table if dashboard items were 0
+                            sem_m, sem_nm = parse_semester_absences(rep_html)
+                            if sem_name == "sem1":
+                                if sem_m > 0 and absence_summary.sem1_motivated == 0:
+                                    absence_summary.sem1_motivated = sem_m
+                                if sem_nm > 0 and absence_summary.sem1_unmotivated == 0:
+                                    absence_summary.sem1_unmotivated = sem_nm
+                            elif sem_name == "sem2":
+                                if sem_m > 0 and absence_summary.sem2_motivated == 0:
+                                    absence_summary.sem2_motivated = sem_m
+                                if sem_nm > 0 and absence_summary.sem2_unmotivated == 0:
+                                    absence_summary.sem2_unmotivated = sem_nm
                 except Exception as err:
                     _LOGGER.warning("Failed to fetch %s grades report: %s", sem_name, err)
 

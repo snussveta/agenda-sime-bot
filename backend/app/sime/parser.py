@@ -173,41 +173,156 @@ def parse_homework(html_snippet: str) -> List[SimeHomework]:
     return homework_list
 
 
-def parse_absence_summary(soup: BeautifulSoup) -> SimeAbsenceSummary:
-    def get_int(val_str: str) -> int:
+def parse_semester_absences(report_html: str) -> Tuple[int, int]:
+    """Parse motivated and unmotivated absences from a semester report table."""
+    if not report_html:
+        return 0, 0
+
+    soup = BeautifulSoup(report_html, "html.parser")
+    table = soup.find("table", class_=lambda c: c and "t-Report-report" in c)
+    if not table:
+        return 0, 0
+
+    motivat = 0
+    nemotivat = 0
+
+    for tr in table.find_all("tr"):
+        for td in tr.find_all("td"):
+            raw_hdr = td.get("headers")
+            hdr = (" ".join(raw_hdr) if isinstance(raw_hdr, list) else str(raw_hdr or "")).upper()
+            txt = td.get_text(strip=True)
+            if not txt.isdigit():
+                continue
+            val = int(txt)
+            if "NEMOTIVAT" in hdr or "ABS_NM" in hdr or "UNMOTIVAT" in hdr:
+                nemotivat += val
+            elif "MOTIVAT" in hdr or "ABS_M" in hdr:
+                motivat += val
+
+    # Check footer rows if any
+    tfoot = table.find("tfoot")
+    if tfoot:
+        for td in tfoot.find_all("td"):
+            raw_hdr = td.get("headers")
+            hdr = (" ".join(raw_hdr) if isinstance(raw_hdr, list) else str(raw_hdr or "")).upper()
+            txt = td.get_text(strip=True)
+            if txt.isdigit():
+                val = int(txt)
+                if "NEMOTIVAT" in hdr or "ABS_NM" in hdr:
+                    nemotivat = max(nemotivat, val)
+                elif "MOTIVAT" in hdr or "ABS_M" in hdr:
+                    motivat = max(motivat, val)
+
+    return motivat, nemotivat
+
+
+def parse_absence_summary(soup: BeautifulSoup, raw_html: str = "") -> SimeAbsenceSummary:
+    def get_int(val_str: Any) -> int:
         if not val_str:
             return 0
-        clean = re.sub(r"[^\d]", "", val_str)
+        clean = re.sub(r"[^\d]", "", str(val_str))
         return int(clean) if clean else 0
 
-    presence_str = get_input_value(soup, "P1_PRESENCE_PERCENT", "P1_RATA_PREZ", default="100")
-    presence = get_int(presence_str) or 100
+    page_items: Dict[str, str] = {}
 
-    # Search known item IDs for motivated / unmotivated absences
-    sem1_m = get_int(get_input_value(soup, "P1_MOTIVATED", "P1_MOTIVATED1", "P1_MOTIVAT", "P1_NR_ABS_SEM_1_M"))
-    sem1_nm = get_int(get_input_value(soup, "P1_UNMOTIVATED", "P1_UNMOTIVATED1", "P1_NEMOTIVAT", "P1_NR_ABS_SEM_1_NM"))
-    sem2_m = get_int(get_input_value(soup, "P1_MOTIVATED2", "P1_MOTIVAT2", "P1_NR_ABS_SEM_2_M"))
-    sem2_nm = get_int(get_input_value(soup, "P1_UNMOTIVATED2", "P1_NEMOTIVAT2", "P1_NR_ABS_SEM_2_NM"))
+    # 1. Collect from all input elements
+    for inp in soup.find_all("input"):
+        nid = (inp.get("id") or inp.get("name") or "").upper()
+        v = inp.get("value")
+        if nid and v is not None:
+            page_items[nid] = v.strip()
 
-    # Also search for badges or spans if input values were empty
-    if sem1_m == 0 and sem1_nm == 0 and sem2_m == 0 and sem2_nm == 0:
-        # Search page items with name containing motivated / unmotivated
-        for inp in soup.find_all("input"):
-            name = (inp.get("name") or inp.get("id") or "").upper()
-            val = inp.get("value", "")
-            if not val or not val.isdigit():
-                continue
-            v_int = int(val)
-            if "UNMOTIVAT" in name or "NEMOTIVAT" in name:
-                if "2" in name:
-                    sem2_nm = max(sem2_nm, v_int)
-                else:
-                    sem1_nm = max(sem1_nm, v_int)
-            elif "MOTIVAT" in name:
-                if "2" in name:
-                    sem2_m = max(sem2_m, v_int)
-                else:
-                    sem1_m = max(sem1_m, v_int)
+    # 2. Collect from display elements (span, div, p, td, strong, b)
+    for el in soup.find_all(["span", "div", "p", "td", "b", "strong"]):
+        nid = (el.get("id") or el.get("name") or "").upper()
+        if nid:
+            clean_id = nid.replace("_DISPLAY", "")
+            txt = el.get_text(strip=True)
+            if txt and clean_id not in page_items:
+                page_items[clean_id] = txt
+
+    # 3. Collect from script tags if raw_html provided
+    if raw_html:
+        for m in re.finditer(r'["\'](P1_[A-Z0-9_]+)["\']\s*:\s*["\']([^"\']*)["\']', raw_html):
+            k = m.group(1).upper()
+            if k not in page_items:
+                page_items[k] = m.group(2).strip()
+        for m in re.finditer(r'"name"\s*:\s*"(P1_[^"]+)"\s*,\s*"value"\s*:\s*"([^"]*)"', raw_html):
+            k = m.group(1).upper()
+            if k not in page_items:
+                page_items[k] = m.group(2).strip()
+
+    # Log debug
+    debug_keys = {k: v for k, v in page_items.items() if any(x in k for x in ["ABS", "MOTIV", "PREZ", "RATA", "FRECV"])}
+    if debug_keys:
+        _LOGGER.info("Found absence/presence page items: %s", debug_keys)
+
+    def find_item_val(*keys: str, default: str = "") -> str:
+        for k in keys:
+            ku = k.upper()
+            if ku in page_items:
+                return page_items[ku]
+        return default
+
+    presence_str = find_item_val(
+        "P1_PRESENCE_PERCENT", "P1_RATA_PREZ", "P1_RATA_PREZENTA", "P1_PREZENTA", "P1_RATA_PREZENTEI", default=""
+    )
+    presence = get_int(presence_str)
+
+    # Search semester-specific items
+    sem1_m = get_int(find_item_val(
+        "P1_MOTIVATED", "P1_MOTIVATED1", "P1_MOTIVAT", "P1_MOTIVAT1",
+        "P1_NR_ABS_SEM_1_M", "P1_ABS_M_1", "P1_ABSENTE_MOTIVATE_SEM1",
+        "P1_ABS_MOTIVATE_SEM1", "P1_ABS_M1", "P1_MOTIVATE1"
+    ))
+    sem1_nm = get_int(find_item_val(
+        "P1_UNMOTIVATED", "P1_UNMOTIVATED1", "P1_NEMOTIVAT", "P1_NEMOTIVAT1",
+        "P1_NR_ABS_SEM_1_NM", "P1_ABS_NM_1", "P1_ABSENTE_NEMOTIVATE_SEM1",
+        "P1_ABS_NEMOTIVATE_SEM1", "P1_ABS_NM1", "P1_NEMOTIVATE1"
+    ))
+
+    sem2_m = get_int(find_item_val(
+        "P1_MOTIVATED2", "P1_MOTIVAT2", "P1_NR_ABS_SEM_2_M", "P1_ABS_M_2",
+        "P1_ABSENTE_MOTIVATE_SEM2", "P1_ABS_MOTIVATE_SEM2", "P1_ABS_M2", "P1_MOTIVATE2"
+    ))
+    sem2_nm = get_int(find_item_val(
+        "P1_UNMOTIVATED2", "P1_NEMOTIVAT2", "P1_NR_ABS_SEM_2_NM", "P1_ABS_NM_2",
+        "P1_ABSENTE_NEMOTIVATE_SEM2", "P1_ABS_NEMOTIVATE_SEM2", "P1_ABS_NM2", "P1_NEMOTIVATE2"
+    ))
+
+    # Fallback to total/generic items if semester specific not found
+    if sem1_m == 0 and sem2_m == 0:
+        total_m = get_int(find_item_val("P1_TOTAL_MOTIVAT", "P1_ABSENTE_MOTIVATE", "P1_ABS_MOTIVATE", "P1_ABS_MOTIVAT", "P1_TOT_MOTIVAT"))
+        if total_m > 0:
+            sem1_m = total_m
+
+    if sem1_nm == 0 and sem2_nm == 0:
+        total_nm = get_int(find_item_val("P1_TOTAL_NEMOTIVAT", "P1_ABSENTE_NEMOTIVATE", "P1_ABS_NEMOTIVATE", "P1_ABS_NEMOTIVAT", "P1_TOT_NEMOTIVAT"))
+        if total_nm > 0:
+            sem1_nm = total_nm
+
+    # Regex across raw HTML if items still 0
+    if sem1_m == 0 and sem1_nm == 0 and raw_html:
+        m_regex = re.findall(r'(?:absen[tț]e\s*)?motivate\s*[:\-–]?\s*(?:<[^>]+>\s*)*(\d+)', raw_html, re.I)
+        if not m_regex:
+            m_regex = re.findall(r'(\d+)\s*(?:ore|h)?\s*(?:absen[tț]e\s*)?motivate\b', raw_html, re.I)
+
+        nm_regex = re.findall(r'(?:absen[tț]e\s*)?nemotivate\s*[:\-–]?\s*(?:<[^>]+>\s*)*(\d+)', raw_html, re.I)
+        if not nm_regex:
+            nm_regex = re.findall(r'(\d+)\s*(?:ore|h)?\s*(?:absen[tț]e\s*)?nemotivate\b', raw_html, re.I)
+
+        if m_regex:
+            sem1_m = int(m_regex[0])
+        if nm_regex:
+            sem1_nm = int(nm_regex[0])
+
+    if presence == 0:
+        if raw_html:
+            p_match = re.search(r'(?:prezen[tț][aă]|rata\s*prezen[tț]ei)[^%0-9]{0,20}(\d+)\s*%', raw_html, re.I)
+            if p_match:
+                presence = int(p_match.group(1))
+        if presence == 0:
+            presence = 100
 
     return SimeAbsenceSummary(
         presence_percent=presence,
@@ -282,8 +397,16 @@ def parse_calendar_events(events: List[Dict[str, Any]]) -> List[SimeLesson]:
             )
         )
 
-    # Sort lessons by start time
-    lessons.sort(key=lambda x: x.start_time)
+    # Sort lessons strictly by lesson order (1, 2, 3...) or start time
+    def _lesson_order_key(l: SimeLesson):
+        num = 999
+        if l.order:
+            m = re.search(r'\d+', str(l.order))
+            if m:
+                num = int(m.group(0))
+        return (num, l.start_time or "")
+
+    lessons.sort(key=_lesson_order_key)
     return lessons
 
 
@@ -357,7 +480,7 @@ def parse_student_dashboard(html: str) -> SimeStudentDashboardData:
 
     recent_eval_raw = get_input_value(soup, "P1_LAST_3_EVAL_LIST")
     homework_raw = get_input_value(soup, "P1_HOMEWORK")
-    absence_summary = parse_absence_summary(soup)
+    absence_summary = parse_absence_summary(soup, raw_html=html)
 
     eleve_ck = None
     ck_inp = soup.find("input", id="P1_ELEVE_ID_CHECKSUM") or soup.find("input", attrs={"data-for": "P1_ELEVE_ID"})

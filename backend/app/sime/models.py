@@ -72,14 +72,19 @@ class SimeAbsenceSummary:
         return self.sem1_unmotivated + self.sem2_unmotivated
 
     @property
-    def total(self) -> int:
+    def total_absences(self) -> int:
         return self.total_motivated + self.total_unmotivated
+
+    @property
+    def total(self) -> int:
+        return self.total_absences
 
     def to_dict(self) -> Dict[str, Any]:
         d = asdict(self)
         d["total_motivated"] = self.total_motivated
         d["total_unmotivated"] = self.total_unmotivated
-        d["total"] = self.total
+        d["total"] = self.total_absences
+        d["total_absences"] = self.total_absences
         return d
 
 @dataclass
