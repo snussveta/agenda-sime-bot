@@ -5,7 +5,7 @@ import GradesTab from './components/GradesTab';
 import HomeworkTab from './components/HomeworkTab';
 import TimetableTab from './components/TimetableTab';
 import ProfileTab from './components/ProfileTab';
-import { fetchProfile, fetchGrades, fetchHomework, fetchTimetable, syncData } from './api';
+import { fetchProfile, fetchGrades, fetchHomework, fetchTimetable, syncData, getTg } from './api';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('grades');
@@ -18,15 +18,20 @@ export default function App() {
   const [homeworkList, setHomeworkList] = useState([]);
   const [timetable, setTimetable] = useState([]);
 
-  // Initialize Telegram WebApp
   useEffect(() => {
-    const tg = window.Telegram?.WebApp;
+    const tg = getTg();
     if (tg) {
-      tg.ready();
-      tg.expand();
-      if (tg.setHeaderColor) tg.setHeaderColor('#ffffff');
+      try {
+        tg.ready();
+        tg.expand();
+        if (tg.setHeaderColor) tg.setHeaderColor('#ffffff');
+      } catch (e) {}
     }
-    loadAllData();
+    // Small delay to ensure Telegram WebApp properties are fully populated
+    const timer = setTimeout(() => {
+      loadAllData();
+    }, 150);
+    return () => clearTimeout(timer);
   }, []);
 
   const loadAllData = async () => {

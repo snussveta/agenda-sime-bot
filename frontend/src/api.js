@@ -1,13 +1,19 @@
 // API client for Agenda SIME Mini App
 
-const tg = window.Telegram?.WebApp;
+export function getTg() {
+  return typeof window !== 'undefined' ? window.Telegram?.WebApp : null;
+}
 
 export function getHeaders() {
+  const tg = getTg();
   const initData = tg?.initData || '';
+  const userId = tg?.initDataUnsafe?.user?.id || '';
+
   return {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${initData}`,
     'X-Telegram-Init-Data': initData,
+    'X-Telegram-User-Id': String(userId),
   };
 }
 
@@ -43,6 +49,7 @@ export async function syncData() {
 
 export function triggerHaptic(type = 'light') {
   try {
+    const tg = getTg();
     if (tg?.HapticFeedback) {
       if (type === 'selection') tg.HapticFeedback.selectionChanged();
       else tg.HapticFeedback.impactOccurred(type);
