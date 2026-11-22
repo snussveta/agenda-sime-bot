@@ -102,6 +102,7 @@ class SimeLesson:
     classroom: Optional[str] = None
     teacher: Optional[str] = None
     topic: Optional[str] = None
+    order: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)

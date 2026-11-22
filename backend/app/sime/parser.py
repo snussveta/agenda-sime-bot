@@ -174,20 +174,43 @@ def parse_homework(html_snippet: str) -> List[SimeHomework]:
 
 
 def parse_absence_summary(soup: BeautifulSoup) -> SimeAbsenceSummary:
-    def safe_int(val: str, default: int = 0) -> int:
-        clean = re.sub(r"[^\d]", "", val)
-        return int(clean) if clean else default
+    def get_int(val_str: str) -> int:
+        if not val_str:
+            return 0
+        clean = re.sub(r"[^\d]", "", val_str)
+        return int(clean) if clean else 0
 
-    pct_str = get_input_value(soup, "P1_RATA_PREZ")
-    pct = safe_int(pct_str, 100)
+    presence_str = get_input_value(soup, "P1_PRESENCE_PERCENT", "P1_RATA_PREZ", default="100")
+    presence = get_int(presence_str) or 100
 
-    sem1_m = safe_int(get_input_value(soup, "P1_NR_ABS_SEM_1_M"))
-    sem1_nm = safe_int(get_input_value(soup, "P1_NR_ABS_SEM_1_NM"))
-    sem2_m = safe_int(get_input_value(soup, "P1_NR_ABS_SEM_2_M"))
-    sem2_nm = safe_int(get_input_value(soup, "P1_NR_ABS_SEM_2_NM"))
+    # Search known item IDs for motivated / unmotivated absences
+    sem1_m = get_int(get_input_value(soup, "P1_MOTIVATED", "P1_MOTIVATED1", "P1_MOTIVAT", "P1_NR_ABS_SEM_1_M"))
+    sem1_nm = get_int(get_input_value(soup, "P1_UNMOTIVATED", "P1_UNMOTIVATED1", "P1_NEMOTIVAT", "P1_NR_ABS_SEM_1_NM"))
+    sem2_m = get_int(get_input_value(soup, "P1_MOTIVATED2", "P1_MOTIVAT2", "P1_NR_ABS_SEM_2_M"))
+    sem2_nm = get_int(get_input_value(soup, "P1_UNMOTIVATED2", "P1_NEMOTIVAT2", "P1_NR_ABS_SEM_2_NM"))
+
+    # Also search for badges or spans if input values were empty
+    if sem1_m == 0 and sem1_nm == 0 and sem2_m == 0 and sem2_nm == 0:
+        # Search page items with name containing motivated / unmotivated
+        for inp in soup.find_all("input"):
+            name = (inp.get("name") or inp.get("id") or "").upper()
+            val = inp.get("value", "")
+            if not val or not val.isdigit():
+                continue
+            v_int = int(val)
+            if "UNMOTIVAT" in name or "NEMOTIVAT" in name:
+                if "2" in name:
+                    sem2_nm = max(sem2_nm, v_int)
+                else:
+                    sem1_nm = max(sem1_nm, v_int)
+            elif "MOTIVAT" in name:
+                if "2" in name:
+                    sem2_m = max(sem2_m, v_int)
+                else:
+                    sem1_m = max(sem1_m, v_int)
 
     return SimeAbsenceSummary(
-        presence_percent=pct,
+        presence_percent=presence,
         sem1_motivated=sem1_m,
         sem1_unmotivated=sem1_nm,
         sem2_motivated=sem2_m,
@@ -199,12 +222,52 @@ def parse_calendar_events(events: List[Dict[str, Any]]) -> List[SimeLesson]:
     lessons: List[SimeLesson] = []
     for ev in events:
         lesson_id = str(ev.get("id", ""))
-        subject = ev.get("title", "Lecție")
         start_raw = ev.get("start", "")
         end_raw = ev.get("end", "")
+        title_raw = ev.get("title", "Lecție")
 
-        classroom = ev.get("className") or ev.get("room") or None
-        teacher = ev.get("teacher") or ev.get("description") or None
+        # Parse internal HTML from title (e.g. lesson-card)
+        subject = "Lecție"
+        classroom = None
+        teacher = None
+        topic = None
+        order = None
+
+        if "<" in title_raw and ">" in title_raw:
+            soup = BeautifulSoup(title_raw, "html.parser")
+
+            subj_elem = soup.find(class_="lesson-text-wrap") or soup.find(class_="lesson-line1")
+            if subj_elem:
+                # Remove lesson-room span from subject line if present
+                for r_span in subj_elem.find_all(class_="lesson-room"):
+                    r_span.decompose()
+                subject = subj_elem.get_text(strip=True)
+            else:
+                subject = soup.get_text(" ", strip=True)
+
+            room_elem = soup.find(class_="lesson-room")
+            if room_elem:
+                classroom = room_elem.get_text(strip=True)
+
+            teacher_elem = soup.find(class_="lesson-teacher") or soup.find(class_="lesson-line2")
+            if teacher_elem:
+                teacher = teacher_elem.get_text(strip=True)
+
+            order_elem = soup.find(class_="lesson-order")
+            if order_elem:
+                order = order_elem.get_text(strip=True)
+
+            topic_elem = soup.find(class_="lesson-homework") or soup.find(class_="lesson-line3")
+            if topic_elem:
+                topic = topic_elem.get_text(" ", strip=True)
+        else:
+            subject = title_raw
+            classroom = ev.get("room") or None
+            teacher = ev.get("teacher") or None
+
+        # Clean classroom if it's default CSS class like "fc-apex-events-default"
+        if classroom and ("fc-apex" in classroom or "apex-events" in classroom):
+            classroom = None
 
         lessons.append(
             SimeLesson(
@@ -212,29 +275,31 @@ def parse_calendar_events(events: List[Dict[str, Any]]) -> List[SimeLesson]:
                 subject=subject,
                 start_time=start_raw,
                 end_time=end_raw,
-                classroom=str(classroom) if classroom else None,
-                teacher=str(teacher) if teacher else None,
+                classroom=classroom,
+                teacher=teacher,
+                topic=topic,
+                order=order,
             )
         )
+
+    # Sort lessons by start time
+    lessons.sort(key=lambda x: x.start_time)
     return lessons
 
 
 def parse_login_dialog_url(html: str, user_type: str) -> Optional[str]:
-    # 1. Decode HTML entities and unicode escapes
     text = html_lib.unescape(html)
     try:
         text = text.encode("utf-8").decode("unicode_escape")
     except Exception:
         pass
 
-    # Match APEX dialog or openUrl with login_desktop or login
     pattern = rf'(/ords/r/agenda/main/login[^"\'\)]*p101_user_type={user_type}[^"\'\)]*)'
     m = re.search(pattern, text, re.IGNORECASE)
     if m:
         raw_url = m.group(1).split("',")[0].split('",')[0].strip()
         return urllib.parse.urljoin(BASE_URL, raw_url)
 
-    # Fallback to direct link
     soup = BeautifulSoup(html, "html.parser")
     for a in soup.find_all("a", href=True):
         href = a["href"]
@@ -268,7 +333,6 @@ def parse_login_form_tokens(dialog_html: str) -> Dict[str, Any]:
         if inp.has_attr("id") and inp["id"].endswith("_CHECKSUM"):
             checksums[inp["id"].replace("_CHECKSUM", "")] = inp.get("value", "")
 
-    # Regex fallback for checksums in JSON
     item_ck_pattern = re.compile(r'"name":"(P101_[^"]+)","value":"[^"]*","checksum":"([^"]+)"')
     for m in item_ck_pattern.finditer(dialog_html):
         checksums[m.group(1)] = m.group(2)
