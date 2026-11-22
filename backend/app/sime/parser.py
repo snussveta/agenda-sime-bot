@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html as html_lib
 import logging
 import re
 import urllib.parse
@@ -24,10 +25,11 @@ _LOGGER = logging.getLogger(__name__)
 BASE_URL = "https://agenda.sime.md"
 
 
-def get_input_value(soup: BeautifulSoup, element_id: str, default: str = "") -> str:
-    inp = soup.find("input", id=element_id) or soup.find("input", attrs={"name": element_id})
-    if inp and inp.has_attr("value"):
-        return inp["value"]
+def get_input_value(soup: BeautifulSoup, *element_ids: str, default: str = "") -> str:
+    for eid in element_ids:
+        inp = soup.find("input", id=eid) or soup.find("input", attrs={"name": eid})
+        if inp and inp.has_attr("value"):
+            return inp["value"]
     return default
 
 
@@ -35,13 +37,13 @@ def parse_student_profile(soup: BeautifulSoup) -> SimeStudent:
     student_id = get_input_value(soup, "P1_ELEVE_ID")
     name = get_input_value(soup, "P1_ELEVE")
     birthdate = get_input_value(soup, "P1_BIRTH_DATE") or None
-    uk = get_input_value(soup, "P1_ELEVE_UK") or get_input_value(soup, "P1_UK") or None
+    uk = get_input_value(soup, "P1_ELEVE_UK", "P1_UK") or None
     classroom = get_input_value(soup, "P1_CLASS_NAME") or None
     school = get_input_value(soup, "P1_INSTITUTION_NAME") or None
     diriginte = get_input_value(soup, "P1_DIRIGINTE") or None
     address = get_input_value(soup, "P1_ADDRESS") or None
     study_year = get_input_value(soup, "P1_STUDY_YEAR") or None
-    sem_str = get_input_value(soup, "P1_SEMESTER_ID", "1")
+    sem_str = get_input_value(soup, "P1_SEMESTER_ID", default="1")
     try:
         semester = int(sem_str)
     except ValueError:
@@ -218,54 +220,55 @@ def parse_calendar_events(events: List[Dict[str, Any]]) -> List[SimeLesson]:
 
 
 def parse_login_dialog_url(html: str, user_type: str) -> Optional[str]:
-    pattern = rf'apex\.theme\.openUrl\((["\'])(https?://agenda\.sime\.md/ords/r/agenda/main/login[^"\']*P101_USER_TYPE={user_type}[^"\']*)\1'
-    match = re.search(pattern, html)
-    if match:
-        raw_url = match.group(2)
-        return raw_url.encode().decode("unicode_escape")
+    # 1. Decode HTML entities and unicode escapes
+    text = html_lib.unescape(html)
+    try:
+        text = text.encode("utf-8").decode("unicode_escape")
+    except Exception:
+        pass
 
-    alt_pattern = rf'href=(["\'])(https?://agenda\.sime\.md/ords/r/agenda/main/login[^"\']*P101_USER_TYPE={user_type}[^"\']*)\1'
-    alt_match = re.search(alt_pattern, html)
-    if alt_match:
-        return alt_match.group(2).encode().decode("unicode_escape")
+    # Match APEX dialog or openUrl with login_desktop or login
+    pattern = rf'(/ords/r/agenda/main/login[^"\'\)]*p101_user_type={user_type}[^"\'\)]*)'
+    m = re.search(pattern, text, re.IGNORECASE)
+    if m:
+        raw_url = m.group(1).split("',")[0].split('",')[0].strip()
+        return urllib.parse.urljoin(BASE_URL, raw_url)
 
+    # Fallback to direct link
     soup = BeautifulSoup(html, "html.parser")
     for a in soup.find_all("a", href=True):
-        if "login" in a["href"] and f"P101_USER_TYPE={user_type}" in a["href"]:
-            return urllib.parse.urljoin(BASE_URL, a["href"])
+        href = a["href"]
+        if "login" in href and f"p101_user_type={user_type}" in href.lower():
+            return urllib.parse.urljoin(BASE_URL, href)
 
     return None
 
 
 def parse_login_form_tokens(dialog_html: str) -> Dict[str, Any]:
     soup = BeautifulSoup(dialog_html, "html.parser")
-    form = soup.find("form", id="wwvFlowForm")
+    form = soup.find("form", id="wwvFlowForm") or soup.find("form")
     if not form:
-        raise SimeAuthError("Could not find wwvFlowForm in login dialog")
+        raise SimeAuthError("Could not find login form in dialog")
 
     action = form.get("action", "wwv_flow.accept")
 
-    p_flow_id = get_input_value(soup, "pFlowId")
-    p_flow_step_id = get_input_value(soup, "pFlowStepId")
-    p_instance = get_input_value(soup, "pInstance")
-    p_page_submission_id = get_input_value(soup, "pPageSubmissionId")
-    p_reload_on_submit = get_input_value(soup, "pReloadOnSubmit", "A")
+    p_flow_id = get_input_value(soup, "p_flow_id", "pFlowId", default="104")
+    p_flow_step_id = get_input_value(soup, "p_flow_step_id", "pFlowStepId", default="101")
+    p_instance = get_input_value(soup, "p_instance", "pInstance")
+    p_page_submission_id = get_input_value(soup, "p_page_submission_id", "pPageSubmissionId")
+    p_reload_on_submit = get_input_value(soup, "p_reload_on_submit", "pReloadOnSubmit", default="S")
 
-    salt = get_input_value(soup, "pSalt")
-    protected = get_input_value(soup, "pPageItemsProtected")
+    salt = get_input_value(soup, "pSalt", "p_salt")
+    protected = get_input_value(soup, "pPageItemsProtected", "p_protected")
 
     checksums: Dict[str, str] = {}
-    ck_pattern = re.compile(r'id=["\']pPageItemChecksums["\'][^>]*value=["\']([^"\']+)["\']')
-    ck_match = ck_pattern.search(dialog_html)
-    if ck_match:
-        pass
+    for inp in soup.find_all("input"):
+        if inp.has_attr("data-for") and inp.has_attr("value"):
+            checksums[inp["data-for"]] = inp["value"]
+        if inp.has_attr("id") and inp["id"].endswith("_CHECKSUM"):
+            checksums[inp["id"].replace("_CHECKSUM", "")] = inp.get("value", "")
 
-    for inp in soup.find_all("input", type="hidden"):
-        inp_id = inp.get("id", "")
-        if inp_id.endswith("_CHECKSUM") or inp_id.startswith("pPageItemChecksum"):
-            name = inp_id.replace("_CHECKSUM", "")
-            checksums[name] = inp.get("value", "")
-
+    # Regex fallback for checksums in JSON
     item_ck_pattern = re.compile(r'"name":"(P101_[^"]+)","value":"[^"]*","checksum":"([^"]+)"')
     for m in item_ck_pattern.finditer(dialog_html):
         checksums[m.group(1)] = m.group(2)
@@ -293,12 +296,12 @@ def parse_student_dashboard(html: str) -> SimeStudentDashboardData:
     absence_summary = parse_absence_summary(soup)
 
     eleve_ck = None
-    ck_inp = soup.find("input", id="P1_ELEVE_ID_CHECKSUM")
+    ck_inp = soup.find("input", id="P1_ELEVE_ID_CHECKSUM") or soup.find("input", attrs={"data-for": "P1_ELEVE_ID"})
     if ck_inp:
         eleve_ck = ck_inp.get("value")
 
-    salt = get_input_value(soup, "pSalt")
-    protected = get_input_value(soup, "pPageItemsProtected")
+    salt = get_input_value(soup, "pSalt", "p_salt")
+    protected = get_input_value(soup, "pPageItemsProtected", "p_protected")
 
     sem_configs = [
         (

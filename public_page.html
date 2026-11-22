@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html class="no-js  page-6 app-MAIN" lang="en" >
+<head>
+  <meta http-equiv="x-ua-compatible" content="IE=edge" />
+  <meta charset="utf-8">
+  <title>Agenda electronică</title>
+  <base href="/ords/" />
+<link rel="stylesheet" href="/i/23.2/app_ui/css/Core.min.css?v=23.2.0" type="text/css" />
+<link rel="stylesheet" href="/i/23.2/app_ui/css/Theme-Standard.min.css?v=23.2.0" type="text/css" />
+
+  <link rel="stylesheet" href="/i/23.2/libraries/font-apex/2.2.1/css/font-apex.min.css?v=23.2.0" type="text/css" />
+<link rel="stylesheet" href="/i/23.2/themes/theme_42/23.2/css/Core.min.css?v=23.2.0" type="text/css" />
+
+  
+  <link rel="stylesheet" href="/j/AGENDA/css/28176356851498337.css" type="text/css" />
+
+  
+  <style type="text/css">
+.ui-dialog {
+    width: 420px !important;
+    max-width: 420px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.2) !important;
+}
+
+.ui-dialog-titlebar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 14px 16px !important;
+    background: white !important;
+    border-bottom: 1px solid #f0f4f8 !important;
+    border-radius: 16px 16px 0 0 !important;
+    min-height: auto !important;
+}
+
+.ui-dialog-title { display: none !important; }
+.ui-dialog-content { padding: 0 !important; }
+
+.ui-widget-overlay {
+    background: rgba(10,20,40,0.5) !important;
+    backdrop-filter: blur(7px) !important;
+    -webkit-backdrop-filter: blur(7px) !important;
+}
+
+.ui-dialog-title {
+    display: block !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    text-align: center !important;
+    flex: 1 !important;
+    padding-left: 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.ui-dialog-titlebar-close {
+    background: #f1f5f9 !important;
+    border-radius: 50% !important;
+    border: none !important;
+    width: 28px !important;
+    height: 28px !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+.ui-dialog-titlebar-close:hover {
+    background: #e2e8f0 !important;
+}
+
+.ui-dialog-content {
+    padding: 0 !important;
+}
+
+
+@media (max-width: 600px) {
+    .ui-dialog {
+        width: 96vw !important;
+        max-width: 96vw !important;
+        left: 2vw !important;
+        right: 2vw !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        position: fixed !important;
+        margin: 0 !important;
+    }
+}
+
+
+
+.t-Footer-customize, .t-Footer-srMode, .t-Footer-version {
+  display: none;
+}
+
+</style>
+  
+  <link rel="apple-touch-icon" href="/j/AGENDA/icons/app-icon-192.png" /><link rel="icon" href="/j/AGENDA/icons/app-icon-32.png" />
+  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Pragma" content="no-cache" /><meta http-equiv="Expires" content="-1" /><meta http-equiv="Cache-Control" content="no-cache" /><meta name="theme-color" content="&#x23;000000" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Agenda&#x20;SIME" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<link rel="manifest" href="&#x2F;ords&#x2F;r&#x2F;agenda&#x2F;main&#x2F;manifest.json&#x3F;v&#x3D;23.2.0-56192503692&#x26;lang&#x3D;en" crossorigin="use-credentials" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body class="t-PageBody t-PageBody--hideLeft t-PageBody--hideActions no-anim   apex-side-nav apex-icons-fontapex apex-theme-agenda-blue-white t-PageBody--noNav t-PageTemplate--minimal"   id="t_PageBody">
+<a href="#main" id="t_Body_skipToContent">Skip to Main Content</a>
+<form role="none" action="wwv_flow.accept?p_context=main/public/26005237931358" method="post" name="wwv_flow" id="wwvFlowForm" data-oj-binding-provider="none" novalidate  autocomplete="off">
+<input type="hidden" name="p_flow_id" value="104" id="pFlowId" /><input type="hidden" name="p_flow_step_id" value="6" id="pFlowStepId" /><input type="hidden" name="p_instance" value="26005237931358" id="pInstance" /><input type="hidden" name="p_page_submission_id" value="129127290415294540333767356836109096219" id="pPageSubmissionId" /><input type="hidden" name="p_request" value="" id="pRequest" /><input type="hidden" name="p_reload_on_submit" value="S" id="pReloadOnSubmit" /><input type="hidden" value="main&#x2F;public&#x2F;26005237931358" id="pContext" /><input type="hidden" value="129127290415294540333767356836109096219" id="pSalt" />
+<header class="t-Header" id="t_Header" role="banner">
+  
+  <div class="t-Header-branding">
+    <div class="t-Header-controls">
+      <button class="t-Button t-Button--icon t-Button--header t-Button--headerTree" aria-label="Expand / Collapse Navigation" title="Expand / Collapse Navigation" id="t_Button_navControl" type="button"><span class="t-Icon fa fa-bars" aria-hidden="true"></span></button>
+    </div>
+    <div class="t-Header-logo">
+      <a href="&#x2F;ords&#x2F;r&#x2F;agenda&#x2F;main&#x2F;public?session=26005237931358" class="t-Header-logo-link"><style>
+.t-Header,
+.t-Header-branding {
+  height: 50px !important;
+}
+
+.t-Header-branding {
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+div.t-Header-navBar--center {
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+.my-app-brand {
+  display: flex !important;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  height:100%;
+}
+
+.my-app-brand__logo{
+  display:block !important;
+  height:68px !important;
+  width:auto !important;
+  max-height:55px !important;
+  max-width:none !important;
+  object-fit:contain;
+  flex:0 0 auto;
+
+}
+
+.my-app-brand__text{
+  font-size:19px;
+  font-weight:500;
+  white-space:nowrap;
+  line-height:1;
+  letter-spacing: 0.2px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #E0F2FE;
+  text-shadow: 0 1px 1px lightblue;
+}
+
+/* mobil */
+  @media (max-width: 768px) {
+   .my-app-brand__logo {
+      height: 26px;
+   }
+
+  .my-app-brand__text {
+    font-size: 17px;
+  }
+
+  .my-app-brand {
+    gap: 2px;
+  }
+}
+</style>
+
+<div class="my-app-brand">
+  <img src="/j/AGENDA/icons/logo-agenda-sice.png" alt="Logo" class="my-app-brand__logo">
+  <span class="my-app-brand__text">Agenda electronică</span>
+</div></a>
+      
+    </div>
+    <div class="t-Header-navBar">
+      <div class="t-Header-navBar--start"></div>
+      <div class="t-Header-navBar--center"><ul class="t-NavigationBar " id="989002540766070929"><li class="t-NavigationBar-item a-pwaInstall">
+  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="#action$a-pwa-install" title="" target="">
+    <span class="t-Icon fa&#x20;fa-cloud-download" aria-hidden="true" ></span><span class="t-Button-label">Install App</span><span class="t-Button-badge"></span>
+  </a>
+</li><li class="t-NavigationBar-item ">
+  <a class="t-Button t-Button--icon t-Button--header t-Button--navBar" href="/ords/r/agenda/main/faqsection?session=26005237931358" title="" target="">
+    <span class="t-Icon fa&#x20;fa-question-circle" aria-hidden="true" ></span><span class="t-Button-label">Întrebări frecvente</span><span class="t-Button-badge"></span>
+  </a>
+</li></ul></div>
+      <div class="t-Header-navBar--end"></div>
+    </div>
+  </div>
+</header>
+    <div class="t-Body">
+  <div class="t-Body-main">
+    <div class="t-Body-title" id="t_Body_title"></div>
+    <div class="t-Body-content" id="t_Body_content">
+      <main id="main" class="t-Body-mainContent">
+        <span id="APEX_SUCCESS_MESSAGE" data-template-id="989048646036071190_S" class="apex-page-success u-hidden"></span><span id="APEX_ERROR_MESSAGE" data-template-id="989048646036071190_E" class="apex-page-error u-hidden"></span>
+        <div class="t-Body-fullContent"></div>
+        <div class="t-Body-contentInner"><div class="container">
+<div class="row ">
+<div class="col col-12 apex-col-auto col-start col-end" ><div class="t-Region t-Region--removeHeader js-removeLandmark t-Region--noUI t-Region--scrollBody" id="R999922468728631045"  role="region" aria-label="Main" style="display:none;">
+ <div class="t-Region-header">
+  <div class="t-Region-headerItems t-Region-headerItems--title">
+    <span class="t-Region-headerIcon"><span class="t-Icon " aria-hidden="true"></span></span>
+    <h2 class="t-Region-title" id="R999922468728631045_heading" data-apex-heading>Main</h2>
+  </div>
+  <div class="t-Region-headerItems t-Region-headerItems--buttons"><span class="js-maximizeButtonContainer"></span></div>
+ </div>
+ <div class="t-Region-bodyWrap">
+   <div class="t-Region-buttons t-Region-buttons--top">
+    <div class="t-Region-buttons-left"></div>
+    <div class="t-Region-buttons-right"></div>
+   </div>
+   <div class="t-Region-body">
+     <div class="t-Region-orderBy"></div>
+     Păstrează legătura cu școala copilului tău
+oriunde și oricând Vă ve-ți afla!
+<ul class="t-Breadcrumb "></ul>
+     
+   </div>
+   <div class="t-Region-buttons t-Region-buttons--bottom">
+    <div class="t-Region-buttons-left"></div>
+    <div class="t-Region-buttons-right"></div>
+   </div>
+ </div>
+</div>
+</div>
+</div><div class="row ">
+<div class="col col-12 apex-col-auto col-start col-end" ><div class="t-Region t-Region--noPadding t-Region--removeHeader js-removeLandmark t-Region--textContent t-Region--scrollBody" id="top_login_region"  role="region" aria-label="Btn&#x20;de&#x20;autentificare" style="text-align:center">
+ <div class="t-Region-header">
+  <div class="t-Region-headerItems t-Region-headerItems--title">
+    <span class="t-Region-headerIcon"><span class="t-Icon " aria-hidden="true"></span></span>
+    <h2 class="t-Region-title" id="top_login_region_heading" data-apex-heading>Btn de autentificare</h2>
+  </div>
+  <div class="t-Region-headerItems t-Region-headerItems--buttons"><span class="js-maximizeButtonContainer"></span></div>
+ </div>
+ <div class="t-Region-bodyWrap">
+   <div class="t-Region-buttons t-Region-buttons--top">
+    <div class="t-Region-buttons-left"></div>
+    <div class="t-Region-buttons-right"></div>
+   </div>
+   <div class="t-Region-body">
+     <div class="t-Region-orderBy"></div>
+     <a-dynamic-content region-id="top_login_region" ajax-identifier="UkVHSU9OIFRZUEV-fjEwMDcyNzk2Mjg1OTQ1OTI4MzQ&#x2F;W473g3GVfo_6KY-8BDOtC-62WMBd-47UqR_5MuFpj6wHLBK2nDwMvWeV4cUTvSMVUx9zjsG2FkWn76M9tIBxMw" >
+<style>
+
+/* Transparent DOAR pentru regiunea de sus */ 
+#top_login_region {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ae-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 35px;               
+  margin-top: 20px;
+  background: transparent !important;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;               
+}
+
+.icon-container .btn {
+  display: block;
+  overflow: hidden;
+  transition: all .25s ease;
+  border-radius: 50%;
+}
+
+.icon-container img {
+  width: 210px;
+  height: 210px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: all .3s ease;
+  object-fit: contain; 
+}
+
+.icon-container .btn:hover img {
+  transform: scale(1.04);
+  box-shadow: 0 14px 34px rgba(0,120,180,0.18);
+}
+
+.ae-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;                
+}
+
+.loginButton {
+  display: flex;
+  justify-content: center;
+}
+
+.loginButton img {
+  height: 62px;
+  width: auto;
+  transition: all .25s ease;
+}
+
+.loginButton img:hover {
+  transform: scale(1.14);
+}
+
+/* mobile */
+@media screen and (max-width: 768px) {
+  .ae-top {
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 12px;
+  }
+
+  .icon-container {
+    flex-direction: row;       
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .icon-container img {
+    width: 40vw;
+    height: 40vw;
+  }
+
+  .ae-login {
+    flex-direction: row;       
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .loginButton img {
+    height: 48px;
+  }
+}
+
+@media (min-width: 501px) and (max-width: 768px) {
+  .icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .icon-container .btn {
+    flex: 0 0 auto;
+  }
+
+  .icon-container img {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .loginButton img {
+    height: 42px;
+  }
+
+  .icon-container img {
+    width: 43vw;
+    height: 43vw;
+  }
+}
+
+</style>
+
+<div class="ae-top">
+
+  <!-- INSTITUȚII -->
+  <div class="icon-container">
+
+    <a class="btn" href="&#x2F;ords&#x2F;r&#x2F;agenda&#x2F;main&#x2F;public&#x3F;session&#x3D;26005237931358">
+      <img src="/j/AGENDA/gen-blue.png" alt="Învățământ General">
+    </a>
+
+    <a class="btn" href="&#x2F;ords&#x2F;f&#x3F;p&#x3D;109&#x3A;6&#x3A;26005237931358&#x3A;&#x3A;&#x3A;&#x3A;&#x3A;">
+      <img src="/j/AGENDA/pt-grey.png" alt="Învățământ Profesional Tehnic">
+    </a>
+
+  </div>
+
+  <!-- LOGIN -->
+  <div class="ae-login">
+
+    <div class="loginButton">
+      <a href="javascript&#x3A;apex.theme42.dialog&#x28;&#x27;&#x5C;u002Fords&#x5C;u002Fr&#x5C;u002Fagenda&#x5C;u002Fmain&#x5C;u002Flogin_desktop&#x3F;p101_user_type&#x3D;1&#x5C;u0026clear&#x3D;101&#x5C;u0026session&#x3D;26005237931358&#x5C;u0026dialogCs&#x3D;MOijJTmpiYi3NGyzj7ot-PxtPfNjWdS739PtzTBBLFgR_SJEWdFvZkhqtbpAKE85G7l-BNaSaJYu-aQsRwLB_g&#x27;,&#x7B;title&#x3A;&#x27;Autentificare&#x20;&#x7C;&#x20;&#x5C;u00CEnv&#x5C;u0103&#x5C;u021B&#x5C;u0103m&#x5C;u00E2ntul&#x20;general&#x27;,h&#x3A;&#x27;auto&#x27;,w&#x3A;&#x27;720&#x27;,mxw&#x3A;&#x27;960&#x27;,modal&#x3A;true,dialog&#x3A;null,dlgCls&#x3A;&#x27;t-Dialog-page--standard&#x20;&#x27;&#x2B;&#x27;&#x27;&#x7D;,&#x27;&#x27;,&#x27;&#x23;top_login_region&#x27;&#x29;">
+        <img src="/j/AGENDA/icons/Parinte-20.png" alt="Părinte">
+      </a>
+    </div>
+
+    <div class="loginButton">
+      <a href="javascript&#x3A;apex.theme42.dialog&#x28;&#x27;&#x5C;u002Fords&#x5C;u002Fr&#x5C;u002Fagenda&#x5C;u002Fmain&#x5C;u002Flogin_desktop&#x3F;p101_user_type&#x3D;2&#x5C;u0026clear&#x3D;101&#x5C;u0026session&#x3D;26005237931358&#x5C;u0026dialogCs&#x3D;MOijJTmpiYi3NGyzj7ot-PxtPfNjWdS739PtzTBBLFgR_SJEWdFvZkhqtbpAKE85G7l-BNaSaJYu-aQsRwLB_g&#x27;,&#x7B;title&#x3A;&#x27;Autentificare&#x20;&#x7C;&#x20;&#x5C;u00CEnv&#x5C;u0103&#x5C;u021B&#x5C;u0103m&#x5C;u00E2ntul&#x20;general&#x27;,h&#x3A;&#x27;auto&#x27;,w&#x3A;&#x27;720&#x27;,mxw&#x3A;&#x27;960&#x27;,modal&#x3A;true,dialog&#x3A;null,dlgCls&#x3A;&#x27;t-Dialog-page--standard&#x20;&#x27;&#x2B;&#x27;&#x27;&#x7D;,&#x27;&#x27;,&#x27;&#x23;top_login_region&#x27;&#x29;">
+        <img src="/j/AGENDA/icons/Elev-19.png" alt="Elev">
+      </a>
+    </div>
+
+  </div>
+
+</div></a-dynamic-content>
+
+     
+   </div>
+   <div class="t-Region-buttons t-Region-buttons--bottom">
+    <div class="t-Region-buttons-left"></div>
+    <div class="t-Region-buttons-right"></div>
+   </div>
+ </div>
+</div>
+</div>
+</div><div class="row ">
+<div class="col col-1  col-start" ><span class="apex-grid-nbsp">&nbsp;</span></div><div class="col col-10  " ><div class="t-Region t-Region--removeHeader js-removeLandmark t-Region--scrollBody" id="home-cards"  role="region" aria-label="Cards&#x20;informativ" >
+ <div class="t-Region-header">
+  <div class="t-Region-headerItems t-Region-headerItems--title">
+    <span class="t-Region-headerIcon"><span class="t-Icon " aria-hidden="true"></span></span>
+    <h2 class="t-Region-title" id="home-cards_heading" data-apex-heading>Cards informativ</h2>
+  </div>
+  <div class="t-Region-headerItems t-Region-headerItems--buttons"><span class="js-maximizeButtonContainer"></span></div>
+ </div>
+ <div class="t-Region-bodyWrap">
+   <div class="t-Region-buttons t-Region-buttons--top">
+    <div class="t-Region-buttons-left"></div>
+    <div class="t-Region-buttons-right"></div>
+   </div>
+   <div class="t-Region-body">
+     <div class="t-Region-orderBy"></div>
+     <style>
+#main .t-Region,
+#main .t-Region-body,
+#main .t-Region-bodyWrap {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#home-cards {
+  margin-top: -10px;
+  background-color: #f2f2f2;
+  border-radius: 18px;
+  padding: 1px 0 35px;
+}
+
+.ae-showcase {
+  max-width: 1200px;
+  margin: 22px auto 0;
+  padding: 28px;
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid #d8e6ef;
+  box-shadow: 0 16px 38px rgba(0, 55, 90, 0.12);
+  display: grid;
+  grid-template-columns: 0.95fr 1.25fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.ae-showcase-left h2 {
+  margin: 0 0 10px;
+  color: #075f8f;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.ae-showcase-left p {
+  margin: 0 0 20px;
+  color: #334d5f;
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+
+.ae-video-box {
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid #cde7f4;
+  background: #f6fbfe;
+}
+
+.ae-video-box iframe {
+  width: 100%;
+  height: 210px;
+  border: 0;
+  display: block;
+  background: #000;
+}
+
+.ae-video-box div {
+  padding: 10px 12px;
+  color: #064f78;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.ae-showcase-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ae-showcase-right img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+}
+
+.ae-benefits {
+  max-width: 1200px;
+  margin: 22px auto 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+.ae-benefit {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 15px 12px;
+  border: 1px solid #d8e6ef;
+  box-shadow: 0 8px 20px rgba(0, 55, 90, 0.08);
+  text-align: center;
+}
+
+.ae-benefit strong {
+  display: block;
+  color: #0787bd;
+  font-size: 18px;
+  margin-bottom: 3px;
+}
+
+.ae-benefit span {
+  color: #405565;
+  font-size: 13px;
+}
+
+/* MOBILE */
+@media screen and (max-width: 900px) {
+  #main,
+  #main .t-Body-contentInner,
+  #main .t-Region,
+  #main .t-Region-body,
+  #main .t-Region-bodyWrap,
+  #home-cards {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  #home-cards {
+    width: 100% !important;
+    border-radius: 0;
+    padding-bottom: 20px;
+  }
+
+  .ae-showcase {
+    width: calc(100vw - 8px);
+    max-width: none !important;
+    margin: 12px 4px 0 !important;
+    padding: 10px;
+    border-radius: 16px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+
+  .ae-showcase-right { order: 1; }
+  .ae-showcase-left  { order: 2; }
+
+  .ae-showcase-right img { border-radius: 12px; }
+
+  .ae-showcase-left h2 {
+    font-size: 21px;
+    line-height: 1.15;
+  }
+
+  .ae-showcase-left p {
+    font-size: 15px;
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+
+  .ae-video-box iframe { height: 200px; }
+
+  .ae-benefits {
+    width: calc(100vw - 8px);
+    max-width: none !important;
+    margin: 12px 4px 0 !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .ae-benefit { padding: 13px 8px; border-radius: 14px; }
+  .ae-benefit strong { font-size: 18px; }
+  .ae-benefit span { font-size: 12.5px; }
+}
+
+/* TELEFON LANDSCAPE */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  #main,
+  #main .t-Body-contentInner,
+  #main .t-Region,
+  #main .t-Region-body,
+  #main .t-Region-bodyWrap,
+  #home-cards {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  #home-cards {
+    width: 100% !important;
+    border-radius: 0;
+    padding-bottom: 18px;
+  }
+
+  .ae-showcase {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 10px 0 0 !important;
+    padding: 10px !important;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .ae-showcase-right { order: 1; }
+  .ae-showcase-left  { order: 2; }
+
+  .ae-showcase-right img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block;
+  }
+
+  .ae-showcase-left h2 { font-size: 20px; line-height: 1.15; }
+  .ae-showcase-left p  { font-size: 15px; line-height: 1.4; margin-bottom: 14px; }
+
+  .ae-video-box iframe { height: 180px; }
+
+  .ae-benefits {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 12px 0 0 !important;
+    padding: 0 8px !important;
+    box-sizing: border-box;
+  }
+
+  .ae-benefit { padding: 11px 6px; border-radius: 12px; }
+  .ae-benefit strong { font-size: 16px; }
+  .ae-benefit span { font-size: 11.5px; }
+
+  html, body { overflow-x: hidden !important; }
+
+  #main,
+  #main .t-Body-content,
+  #main .t-Body-contentInner,
+  #main .container,
+  #main .row,
+  #main .col,
+  #home-cards {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box;
+  }
+}
+
+/* header fix pe mobil */
+@media screen and (max-width: 900px),
+       screen and (max-height: 500px) and (orientation: landscape) {
+  .t-Header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 99999 !important;
+  }
+
+  .t-Body { padding-top: 58px !important; }
+  .t-Body-main, .t-Body-content { padding-top: 0 !important; }
+}
+
+/* Cum funcționează */
+.ae-how {
+  max-width: 1200px;
+  margin: 22px auto 0;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #d8e6ef;
+  box-shadow: 0 8px 20px rgba(0,55,90,0.08);
+  padding: 24px 28px;
+  text-align: center;
+}
+
+.ae-how-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #075f8f;
+  margin: 0 0 6px;
+}
+
+.ae-how-subtitle {
+  font-size: 14px;
+  color: #405565;
+  margin: 0 0 22px;
+}
+
+.ae-how-steps {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+}
+
+.ae-how-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.ae-how-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: calc(50% + 16px);
+  right: calc(-50% + 16px);
+  height: 2px;
+  background: #d8e6ef;
+}
+
+.ae-how-left {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.ae-how-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0787bd;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  position: relative;
+}
+
+.ae-how-line { display: none; }
+
+.ae-how-content { text-align: center; padding: 0 8px; }
+
+.ae-how-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #075f8f;
+  margin: 0 0 4px;
+}
+
+.ae-how-desc {
+  font-size: 12px;
+  color: #405565;
+  line-height: 1.4;
+}
+
+@media screen and (max-width: 900px) {
+  .ae-how {
+    width: calc(100vw - 8px);
+    max-width: none !important;
+    margin: 12px 4px 0 !important;
+    padding: 16px 14px;
+    box-sizing: border-box;
+  }
+
+  .ae-how-steps { flex-direction: column; align-items: flex-start; gap: 0; }
+
+  .ae-how-step {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    padding: 0;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .ae-how-step:not(:last-child)::after { display: none; }
+
+  .ae-how-left {
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    margin-bottom: 0;
+    gap: 0;
+  }
+
+  .ae-how-line {
+    display: block !important;
+    width: 2px;
+    height: 28px;
+    background: #d8e6ef;
+    margin: 0 auto;
+  }
+
+  .ae-how-content { text-align: left; padding: 4px 0 16px; }
+  .ae-how-step:last-child .ae-how-content { padding-bottom: 0; }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .ae-how {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 10px 0 0 !important;
+    padding: 12px !important;
+    box-sizing: border-box;
+  }
+
+  .ae-how-steps { flex-direction: row; }
+  .ae-how-step { flex-direction: column; align-items: center; text-align: center; }
+  .ae-how-step:not(:last-child)::after { display: block; }
+  .ae-how-line { display: none !important; }
+  .ae-how-content { text-align: center; padding: 0 6px; }
+}
+
+/* devices */
+.ae-devices {
+  max-width: 1200px;
+  margin: 22px auto 0;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #d8e6ef;
+  box-shadow: 0 8px 20px rgba(0,55,90,0.08);
+  padding: 28px;
+  text-align: center;
+}
+
+.ae-devices-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #075f8f;
+  margin: 0 0 6px;
+}
+
+.ae-devices-sub {
+  font-size: 14px;
+  color: #405565;
+  margin: 0 0 22px;
+}
+
+.ae-devices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.ae-device-top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+}
+
+.ae-device-info { flex: 1; }
+
+.ae-device-info .ae-device-label,
+.ae-device-info .ae-device-sub { text-align: left; }
+
+.ae-device-featured .ae-pwa-steps { margin-top: 12px; }
+
+.ae-devices-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ae-devices-right .ae-device-card {
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  gap: 14px;
+}
+
+.ae-devices-right .ae-device-card .ae-device-sub { text-align: left; }
+
+.ae-device-card {
+  background: #f7fbfe;
+  border: 1px solid #d8e6ef;
+  border-radius: 14px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.ae-device-featured {
+  border: 2px solid #0787bd;
+  background: #f0f8ff;
+}
+
+.ae-device-pwa-tag {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0787bd;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.ae-device-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ae-device-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #075f8f;
+  margin: 0;
+}
+
+.ae-device-sub {
+  font-size: 13px;
+  color: #405565;
+  margin: 0;
+  text-align: center;
+}
+
+.ae-device-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 99px;
+  background: #EAF3DE;
+  color: #3B6D11;
+}
+
+.ae-pwa-steps {
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid #cde7f4;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: left;
+  width: 100%;
+}
+
+.ae-pwa-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0787bd;
+  margin: 0 0 8px;
+}
+
+.ae-pwa-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #334d5f;
+  line-height: 1.4;
+}
+
+.ae-pwa-step:last-child { margin-bottom: 0; }
+
+.ae-pwa-num {
+  background: #0787bd;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+@media screen and (max-width: 900px) {
+  .ae-devices {
+    width: calc(100vw - 8px);
+    max-width: none !important;
+    margin: 12px 4px 0 !important;
+    padding: 16px 10px;
+    box-sizing: border-box;
+  }
+
+  .ae-devices-grid { grid-template-columns: 1fr; gap: 20px; }
+  .ae-device-featured { order: -1; }
+
+  .ae-devices-right .ae-device-card,
+  .ae-device-featured .ae-device-top {
+    flex-direction: row !important;
+    align-items: center !important;
+    text-align: left !important;
+  }
+
+  .ae-devices-right .ae-device-card .ae-device-sub,
+  .ae-device-info .ae-device-sub { text-align: left !important; }
+
+  .ae-device-icon { flex-shrink: 0; }
+}
+
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .ae-devices {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 10px 0 0 !important;
+    padding: 10px !important;
+    box-sizing: border-box;
+  }
+
+  .ae-devices-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+}
+
+.ae-mobile-links {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+  margin-left: 30px;
+}
+
+.ae-mobile-links a {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #eaf5fb;
+  color: #1b8fbd;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ae-mobile-links a:hover { background: #d5edf8; }
+
+
+
+
+
+</style>
+
+<div class="ae-showcase">
+  <div class="ae-showcase-left">
+    <h2>Descoperă Agenda electronică, învățământul general</h2>
+    <p>
+      Urmărește ghidul video și află cum pot fi consultate rapid
+      notele, absențele, orarul și mesajele școlare.
+    </p>
+
+  <div class="ae-video-box">
+    <iframe
+      src="https://www.youtube.com/embed/MVWhaOjIsl0"
+      title="Prezentare generală"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  <div>Prezentare generală</div>
+</div>
+
+
+ </div>
+
+  <div class="ae-showcase-right">
+    <img src="/j/AGENDA/icons/MainPage.png" alt="Agenda electronică">
+  </div>
+
+</div>
+
+
+<div class="ae-how">
+  <p class="ae-how-title">Cum funcționează</p>
+  <p class="ae-how-subtitle">3 pași simpli pentru a accesa informațiile școlare</p>
+  <div class="ae-how-steps">
+
+    <div class="ae-how-step">
+      <div class="ae-how-left">
+        <div class="ae-how-num">1</div>
+        <div class="ae-how-line"></div>
+      </div>
+      <div class="ae-how-content">
+        <p class="ae-how-label">Înregistrare</p>
+        <p class="ae-how-desc">Creează cont cu datele primite de la școală</p>
+      </div>
+    </div>
+
+    <div class="ae-how-step">
+      <div class="ae-how-left">
+        <div class="ae-how-num">2</div>
+        <div class="ae-how-line"></div>
+      </div>
+      <div class="ae-how-content">
+        <p class="ae-how-label">Conectare la școală</p>
+        <p class="ae-how-desc">Asociază contul cu instituția de învățământ</p>
+      </div>
+    </div>
+
+    <div class="ae-how-step">
+      <div class="ae-how-left">
+        <div class="ae-how-num">3</div>
+        <div class="ae-how-line"></div>
+      </div>
+      <div class="ae-how-content">
+        <p class="ae-how-label">Acces la informații</p>
+        <p class="ae-how-desc">Note, absențe, orar și mesaje — totul într-un loc</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="ae-devices">
+  <p class="ae-devices-title">Disponibil pe orice dispozitiv</p>
+  <p class="ae-devices-sub">Accesibil din browser — instalează direct pe ecranul principal, fără App Store</p>
+
+  <div class="ae-devices-grid">
+
+    <div class="ae-device-card ae-device-featured">
+      <div class="ae-device-pwa-tag">📲 Instalabil</div>
+
+      <div class="ae-device-top">
+        <div class="ae-device-icon" style="background:#E1F5EE;">
+          <img src="/j/AGENDA/icons/dev1.png" alt="Telefon mobil" style="width:32px; height:32px; object-fit:contain;">
+        </div>
+        <div class="ae-device-info">
+          <p class="ae-device-label">Telefon mobil</p>
+          <p class="ae-device-sub">iOS și Android</p>
+        </div>
+        <span class="ae-device-badge">Disponibil</span>
+      </div>
+
+      <div class="ae-pwa-steps">
+        <p class="ae-pwa-title">Cum instalezi pe telefon:</p>
+        <div class="ae-pwa-step">
+          <span class="ae-pwa-num">1</span>
+          <span>Deschide agenda în browser</span>
+        </div>
+        <div class="ae-pwa-step">
+          <span class="ae-pwa-num">2</span>
+          <span>Apasă <b>Share</b> (iOS) sau <b>⋮</b> (Android)</span>
+        </div>
+        <div class="ae-pwa-step">
+          <span class="ae-pwa-num">3</span>
+          <span>Selectează <b>„Adaugă pe ecran principal"</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ae-devices-right">
+
+      <div class="ae-device-card">
+        <div class="ae-device-icon" style="background:#E6F1FB;">
+          <img src="/j/AGENDA/icons/dev2.png" alt="Browser" style="width:32px; height:32px; object-fit:contain;">
+        </div>
+        <p class="ae-device-label">Browser web</p>
+        <p class="ae-device-sub">Chrome, Safari, Firefox, Edge — accesează direct fără instalare</p>
+        <span class="ae-device-badge">Disponibil</span>
+      </div>
+
+      <div class="ae-device-card">
+        <div class="ae-device-icon" style="background:#EAF3DE;">
+          <img src="/j/AGENDA/icons/dev3.png" alt="Tabletă" style="width:32px; height:32px; object-fit:contain;">
+        </div>
+        <p class="ae-device-label">PC &nbsp; Tabletă</p>
+        <p class="ae-device-sub">Interfață adaptată pentru ecrane mari — iPad, Android tablet</p>
+        <span class="ae-device-badge">Disponibil</span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div class="ae-benefits">
+  <a href="f?p=104:18" class="ae-benefit">
+    <strong>FAQ</strong>
+    <span>Întrebări frecvente</span>
+  </a>
+
+  <div class="ae-benefit">
+    <strong>GHID VIDEO</strong>
+    <span>Adaugă pe ecranul telefonului</span>
+    <div class="ae-mobile-links">
+      <a href="https://youtube.com/shorts/5ziPL2d-vu0?feature=share" target="_blank" rel="noopener">iOS</a>
+      <a href="https://youtube.com/shorts/AZQbc3cDgAo?feature=share" target="_blank" rel="noopener">Android</a>
+    </div>
+  </div>
+
+  <a href="https://youtu.be/NkySC2coSVk" target="_blank" rel="noopener" class="ae-benefit">
+    <strong>GHID VIDEO</strong>
+    <span>Înregistrare cont părinte</span>
+  </a>
+
+  <a href="https://youtu.be/cXV0RFI62Kg" target="_blank" rel="noopener" class="ae-benefit">
+    <strong>GHID VIDEO</strong>
+    <span>Înregistrare cont elev</span>
+  </a>
+
+  <a href="https://youtu.be/H-zt2Xrg72U" target="_blank" rel="noopener" class="ae-benefit">
+    <strong>GHID VIDEO</strong>
+    <span>Resetare parolă</span>
+  </a>
+
+  <a href="https://youtube.com/shorts/NDezW94KXvY" target="_blank" rel="noopener" class="ae-benefit">
+    <strong>GHID VIDEO</strong>
+    <span>Generare cod pentru cont elev</span>
+  </a>
+
+    <a href="https://youtu.be/4zP4V4ZuDSg" target="_blank" rel="noopener" class="ae-benefit">
+    <strong>GHID VIDEO</strong>
+    <span>Confirmare adresa de e-mail</span>
+
+  </a>
+
+</div>
+     
+   </div>
+   <div class="t-Region-buttons t-Region-buttons--bottom">
+    <div class="t-Region-buttons-left"></div>
+    <div class="t-Region-buttons-right"></div>
+   </div>
+ </div>
+</div>
+</div>
+</div>
+</div></div>
+      </main>
+      <footer class="t-Footer" id="t_Footer" role="contentinfo">
+        <div class="t-Footer-body">
+          <div class="t-Footer-content"><div class="container">
+<div class="row ">
+<div class="col col-12 apex-col-auto col-start col-end" ><div id="R1041290265608493446" class=""  ><style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+.footer {
+  background: transparent !important;
+
+  color: #1a2a3a;
+  padding: 40px 32px 0;
+  border-radius: 16px 16px 0 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(7,95,143,0.12);
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.footer-logo-icon {
+  width: 38px;
+  height: 38px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.footer-logo-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #075f8f;
+  line-height: 1.2;
+}
+.footer-logo-sub {
+  font-size: 11px;
+  color: #6b8aa0;
+}
+.footer-desc {
+  font-size: 13px;
+  color: #4a6070;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.footer-stats {
+  display: flex;
+  gap: 16px;
+}
+.footer-stat {
+  text-align: center;
+}
+.footer-stat-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: #075f8f;
+}
+.footer-stat-label {
+  font-size: 10px;
+  color: #6b8aa0;
+}
+.footer-col-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b8aa0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
+}
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.footer-links li a {
+  font-size: 13px;
+  color: #2a4a60;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.footer-links li a:hover { color: #075f8f; }
+.footer-link-icon {
+  width: 24px;
+  height: 24px;
+  background: rgba(7,95,143,0.08);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.footer-contact-icon {
+  width: 28px;
+  height: 28px;
+  background: rgba(7,95,143,0.08);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.footer-contact-label {
+  font-size: 11px;
+  color: #6b8aa0;
+  margin-bottom: 2px;
+}
+.footer-contact-value {
+  font-size: 13px;
+  color: #1a2a3a;
+}
+.footer-contact-value a {
+  color: #0787bd;
+  text-decoration: none;
+}
+.footer-contact-value a:hover { color: #0787bd; }
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  font-size: 12px;
+  color: #6b8aa0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.footer-bottom-right {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.footer-badge {
+  background: rgba(7,95,143,0.08);
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  color: #6b8aa0;
+}
+.t-Footer {
+  border-top: 1px solid #d8e6ef !important;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 28px 18px 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-desc {
+    text-align: justify;
+  }
+
+  .footer-col-title {
+    text-align: left !important;
+  }
+
+  .footer-links {
+    padding-left: 0 !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+  }
+
+  .footer-links li {
+    width: 100% !important;
+  }
+
+  .footer-links li a {
+    justify-content: flex-start !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .footer-contact-item {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+  }
+
+  .footer-contact-label,
+  .footer-contact-value {
+    text-align: left !important;
+  }
+}
+
+.footer-contact-value a {
+  color: #2a4a60;
+  text-decoration: none;
+}
+.footer-contact-value a:hover {
+  color: #075f8f;
+}
+
+
+.footer-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.footer-contact-icon {
+  width: 24px;
+  height: 24px;
+  background: rgba(7,95,143,0.08);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+</style>
+
+<div class="footer">
+  <div class="footer-grid">
+
+    <div>
+      <div class="footer-logo">
+        <div class="footer-logo-icon">
+            <img src="/j/AGENDA/icons/aeBlue.png" alt="Browser" style="width:60px; height:60px; object-fit:contain;">
+        </div>
+        <div>
+          <div class="footer-logo-text">Agenda electronică SIME</div>
+          <div class="footer-logo-sub">Platformă educațională</div>
+        </div>
+      </div>
+      <p class="footer-desc">Platformă modernă pentru elevi și părinți — acces rapid la note, absențe, orar și mesaje școlare, oricând și de pe orice dispozitiv.</p>
+      <div class="footer-stats">
+        <div class="footer-stat">
+          <div class="footer-stat-num">700+</div>
+          <div class="footer-stat-label">Instituții</div>
+        </div>
+        <div class="footer-stat">
+          <div class="footer-stat-num">150K+</div>
+          <div class="footer-stat-label">Utilizatori</div>
+        </div>
+        <div class="footer-stat">
+          <div class="footer-stat-num">100%</div>
+          <div class="footer-stat-label">Securizat</div>
+        </div>
+      </div>
+    </div>
+
+<div>
+  <p class="footer-col-title">Link-uri rapide</p>
+
+  <div class="footer-contact-item">
+    <div class="footer-contact-icon">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="5.5" stroke="#075f8f" stroke-width="1.2"/>
+        <line x1="7" y1="6" x2="7" y2="10" stroke="#075f8f" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="7" cy="4.5" r="0.7" fill="#075f8f"/>
+      </svg>
+    </div>
+    <div>
+      <div class="footer-contact-value"><a href="f?p=104:18">Întrebări frecvente</a></div>
+    </div>
+  </div>
+
+  <div class="footer-contact-item">
+    <div class="footer-contact-icon">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <polygon points="3,2 11,7 3,12" fill="#075f8f" opacity="0.9"/>
+      </svg>
+    </div>
+    <div>
+      <div class="footer-contact-value"><a href="https://youtu.be/NkySC2coSVk" target="_blank" rel="noopener">Înregistrare cont părinte</a></div>
+    </div>
+  </div>
+
+
+  <div class="footer-contact-item">
+    <div class="footer-contact-icon">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <polygon points="3,2 11,7 3,12" fill="#075f8f" opacity="0.9"/>
+      </svg>
+    </div>
+    <div>
+      <div class="footer-contact-value"><a href="https://youtu.be/cXV0RFI62Kg"  target="_blank" rel="noopener">Înregistrare cont elev</a></div>
+    </div>
+  </div>
+
+</div>
+
+    <div>
+      <p class="footer-col-title">Contact & suport</p>
+      <div class="footer-contact-item">
+        <div class="footer-contact-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="1" y="3" width="12" height="8" rx="2" stroke="#075f8f" stroke-width="1.2"/>
+            <path d="M1 5l6 4 6-4" stroke="#075f8f" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <div class="footer-contact-label">Email</div>
+          <div class="footer-contact-value"><a href="mailto:sice.agenda@mec.gov.md">sice.agenda@mec.gov.md</a></div>
+        </div>
+      </div>
+
+      <div class="footer-contact-item">
+        <div class="footer-contact-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="7" r="5.5" stroke="#075f8f" stroke-width="1.2"/>
+            <line x1="7" y1="4" x2="7" y2="7" stroke="#075f8f" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="7" y1="7" x2="9.5" y2="9" stroke="#075f8f" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="footer-contact-label">Program suport</div>
+          <div class="footer-contact-value">Luni–Vineri, 9:00–17:00</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Agenda electronică SIME. Toate drepturile rezervate.</span>
+  </div>
+</div></div></div>
+</div>
+</div></div>
+          <div class="t-Footer-apex">
+            <div class="t-Footer-version"> 1.13</div>
+            <div class="t-Footer-customize"></div>
+            
+          </div>
+        </div>
+        <div class="t-Footer-top">
+          <a href="#top" class="t-Footer-topButton" id="t_Footer_topButton" title="Start of page" aria-label="Start of page"><span class="a-Icon icon-up-chevron" aria-hidden="true"></span></a>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+<div class="t-Body-inlineDialogs" id="t_Body_inlineDialogs"></div><input type="hidden" id="pPageFormRegionChecksums" value="&#x5B;&#x5D;">
+<input type="hidden" id="pPageItemsRowVersion" value="" /><input type="hidden" id="pPageItemsProtected" value="&#x2F;zqHo-yTSgvMff47GoVRchkuujnLIV1uw0dIs87femDTz3HD75qmyE8DbHhqKjSkQ40PoBZRPitGDF4RSm24qkQ" /></form>
+
+
+<script>
+var apex_img_dir = "\u002Fi\u002F23.2\u002F";
+var apex = {env: {APP_USER: "nobody",APP_ID: "104",APP_PAGE_ID: "6",APP_SESSION: "26005237931358",APP_FILES: "\u002Fj\u002FAGENDA\u002F",WORKSPACE_FILES: "r\u002Fagenda\u002Ffiles\u002Fstatic\u002Fv6\u002F",APEX_VERSION: "23.2.0",APEX_BASE_VERSION: "23.2"},
+libVersions:{ckeditor5:"36.0.0",cropperJs:"1.5.13",domPurify:"3.0.5",fullcalendar:"6.1.8",hammer:"2.0.8",jquery:"3.6.4",jqueryUi:"1.13.2",maplibre:"2.4.0",markedJs:"5.1.2",prismJs:"1.29.0",oraclejet:"15.0.7",tinymce:"6.7.1",turndown:"7.1.1",monacoEditor:"0.32.1",lessJs:"4.1.3"}};
+</script>
+<script src="/i/23.2/libraries/apex/minified/desktop_all.min.js?v=23.2.0"></script>
+<script src="wwv_flow.js_messages?p_app_id=104&p_lang=en&p_version=23.2.0-56192503692"></script>
+<script src="/i/23.2/libraries/apex/minified/legacy_pre18.min.js?v=23.2.0"></script>
+<script src="/i/23.2/libraries/apex/minified/legacy_18.min.js?v=23.2.0"></script>
+<script src="/i/23.2/libraries/jquery-migrate/3.4.1/jquery-migrate.min.js?v=23.2.0"></script>
+
+
+<script src="/i/23.2/libraries/apex/minified/widget.stickyWidget.min.js?v=23.2.0"></script>
+<script src="/i/23.2/themes/theme_42/23.2/js/theme42.min.js?v=23.2.0"></script>
+
+
+
+<script type="text/javascript">
+function loadAgendaVideo(el) {
+  el.outerHTML = `
+    <iframe
+      class="ae-video-vertical"
+      src="https://www.youtube.com/embed/W8X-akOJIYY?autoplay=1"
+      title="Ghid pentru părinți și elevi"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
+  `;
+}
+</script>  
+
+
+
+
+
+
+
+<script type="text/javascript">
+apex.jQuery( function() {
+apex.page.init( this, function() {
+try {
+} catch(e) {apex.debug.error(e)};
+apex.item.waitForDelayLoadItems().done(function() {
+try {
+apex.theme42.initializePage.noSideCol();
+
+} finally {
+apex.event.trigger(apex.gPageContext$,'apexreadyend');
+};
+});
+});
+});apex.pwa.init( { serviceWorkerPath:'\u002Fords\u002Fr\u002Fagenda\u002Fmain\u002Fsw.js?v=23.2.0-56192503692\u0026lang=en' } );
+</script>
+
+</body>
+</html>

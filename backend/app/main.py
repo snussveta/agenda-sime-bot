@@ -80,19 +80,32 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# 1. API routes
 app.include_router(api_router)
 
+# 2. Static Frontend files
 dist_path = Path(__file__).parent.parent.parent / "frontend" / "dist"
 if not dist_path.exists():
     dist_path = Path("/app/frontend/dist")
 
 if dist_path.exists():
     _LOGGER.info("Mounting Mini App static files from %s", dist_path)
-    app.mount("/app", StaticFiles(directory=dist_path, html=True), name="frontend")
+    
+    # Mount assets folder so /assets/... always works
+    assets_dir = dist_path / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="root-assets")
+        app.mount("/app/assets", StaticFiles(directory=assets_dir), name="app-assets")
 
+    # Serve index.html for both / and /app
     @app.get("/")
-    async def index_redirect():
+    @app.get("/app")
+    @app.get("/app/{full_path:path}")
+    async def serve_index():
         return FileResponse(dist_path / "index.html")
+
+    # Mount remaining root files (favicon, manifest, etc.)
+    app.mount("/", StaticFiles(directory=dist_path, html=True), name="frontend")
 else:
     @app.get("/")
     async def index_fallback():

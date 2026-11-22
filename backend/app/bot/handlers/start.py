@@ -1,7 +1,9 @@
 """Start and Login handlers with FSM."""
 
+import html
 import logging
 from aiogram import F, Router
+from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -34,25 +36,25 @@ async def cmd_start(message: Message, state: FSMContext):
     user = await get_user(telegram_id)
 
     if user and user.get("student_name"):
-        name = user.get("student_name", "Ученик")
-        school = user.get("school_name", "")
-        classroom = user.get("classroom", "")
+        name = html.escape(user.get("student_name", "Ученик"))
+        school = html.escape(user.get("school_name", ""))
+        classroom = html.escape(user.get("classroom", ""))
         await message.answer(
-            f"👋 С возвращением, **{name}**!\n"
+            f"👋 С возвращением, <b>{name}</b>!\n"
             f"🏫 {school} ({classroom})\n\n"
             f"Используйте кнопки меню ниже для просмотра оценок, расписания или откройте интерактивный дневник:",
             reply_markup=get_main_menu_keyboard(),
-            parse_mode="Markdown",
+            parse_mode=ParseMode.HTML,
         )
         return
 
     await message.answer(
-        "👋 **Добро пожаловать в бота Agenda SIME MD!**\n\n"
+        "👋 <b>Добро пожаловать в бота Agenda SIME MD!</b>\n\n"
         "Этот бот позволяет просматривать оценки, домашние задания, расписание уроков "
         "и получать мгновенные уведомления о новых оценках в электронном дневнике Молдовы.\n\n"
         "Чтобы начать, выберите вашу роль для входа в систему:",
         reply_markup=get_role_keyboard(),
-        parse_mode="Markdown",
+        parse_mode=ParseMode.HTML,
     )
 
 
@@ -76,9 +78,9 @@ async def process_role_selected(callback: CallbackQuery, state: FSMContext):
 
     role_name = "ученика" if role == SimeAccountRole.STUDENT else "родителя"
     await callback.message.edit_text(
-        f"Выбран вход для **{role_name}**.\n\n"
-        "✏️ Введите ваш логин от `agenda.sime.md` (обычно первая буква имени и фамилия, например `i.popov`):",
-        parse_mode="Markdown",
+        f"Выбран вход для <b>{role_name}</b>.\n\n"
+        "✏️ Введите ваш логин от <code>agenda.sime.md</code> (обычно первая буква имени и фамилия, например <code>i.popov</code>):",
+        parse_mode=ParseMode.HTML,
     )
     await callback.answer()
 
@@ -94,10 +96,10 @@ async def process_username(message: Message, state: FSMContext):
     await state.set_state(LoginStates.waiting_for_password)
 
     await message.answer(
-        "🔑 Теперь введите ваш пароль от `agenda.sime.md`:\n\n"
-        "🔒 _В целях безопасности ваше сообщение с паролем будет сразу же удалено из чата!_",
+        "🔑 Теперь введите ваш пароль от <code>agenda.sime.md</code>:\n\n"
+        "🔒 <i>В целях безопасности ваше сообщение с паролем будет сразу же удалено из чата!</i>",
         reply_markup=get_cancel_keyboard(),
-        parse_mode="Markdown",
+        parse_mode=ParseMode.HTML,
     )
 
 
@@ -110,15 +112,15 @@ async def process_password(message: Message, state: FSMContext):
         pass
 
     data = await state.get_data()
-    username = data.get("username")
+    username = data.get("username", "")
     role_val = data.get("role", SimeAccountRole.STUDENT.value)
     role = SimeAccountRole(role_val)
     telegram_id = message.from_user.id
 
     status_msg = await message.answer(
-        "⏳ Проверяю данные и вхожу в `agenda.sime.md`... Пожалуйста, подождите несколько секунд.",
+        "⏳ Проверяю данные и вхожу в <code>agenda.sime.md</code>... Пожалуйста, подождите несколько секунд.",
         reply_markup=ReplyKeyboardRemove(),
-        parse_mode="Markdown",
+        parse_mode=ParseMode.HTML,
     )
 
     client = SimeClient(username=username, password=password, role=role)
@@ -139,43 +141,60 @@ async def process_password(message: Message, state: FSMContext):
         )
 
         await state.clear()
-        await status_msg.delete()
+        try:
+            await status_msg.delete()
+        except Exception:
+            pass
 
-        avg_text = f"📊 Средний балл: **{student_data.general_average}**\n" if student_data.general_average else ""
+        avg_text = f"📊 Средний балл: <b>{student_data.general_average}</b>\n" if student_data.general_average else ""
+        s_name = html.escape(student.name or "Ученик")
+        s_school = html.escape(student.school_name or "Не указана")
+        s_class = html.escape(student.classroom or "Не указан")
+
         await message.answer(
-            f"🎉 **Успешный вход!**\n\n"
-            f"👤 Ученик: **{student.name}**\n"
-            f"🏫 Школа: **{student.school_name or 'Не указана'}**\n"
-            f"🎒 Класс: **{student.classroom or 'Не указан'}**\n"
+            f"🎉 <b>Успешный вход!</b>\n\n"
+            f"👤 Ученик: <b>{s_name}</b>\n"
+            f"🏫 Школа: <b>{s_school}</b>\n"
+            f"🎒 Класс: <b>{s_class}</b>\n"
             f"{avg_text}\n"
-            f"🔔 Уведомления о новых оценках: **Включены**\n\n"
-            f"Теперь вы можете открыть дневник кнопкой ниже или использовать быстрые команды:",
+            f"🔔 Уведомления о новых оценках: <b>Включены</b>\n\n"
+            f"Теперь вы можете открыть дневник кнопкой ниже или использовать быстрое меню:",
             reply_markup=get_main_menu_keyboard(),
-            parse_mode="Markdown",
+            parse_mode=ParseMode.HTML,
         )
 
     except SimeAuthError as err:
         _LOGGER.warning("Auth error for %s: %s", username, err)
-        await status_msg.edit_text(
-            "❌ **Ошибка входа:** Неверный логин или пароль.\n"
-            "Пожалуйста, проверьте данные и попробуйте снова: /start",
-            parse_mode="Markdown",
-        )
+        err_text = html.escape(str(err)) or "Неверный логин или пароль."
+        try:
+            await status_msg.edit_text(
+                f"❌ <b>Ошибка входа:</b> {err_text}\n"
+                "Пожалуйста, проверьте логин и пароль и попробуйте снова: /start",
+                parse_mode=ParseMode.HTML,
+            )
+        except Exception:
+            await message.answer(f"❌ Ошибка входа: {err_text}\nПопробуйте снова: /start")
         await state.clear()
     except SimeConnectionError as err:
         _LOGGER.error("Connection error for %s: %s", username, err)
-        await status_msg.edit_text(
-            "⚠️ **Сайт agenda.sime.md временно недоступен.**\n"
-            "Попробуйте повторить попытку через пару минут: /start",
-            parse_mode="Markdown",
-        )
+        try:
+            await status_msg.edit_text(
+                "⚠️ <b>Сайт agenda.sime.md временно недоступен.</b>\n"
+                "Попробуйте повторить попытку через пару минут: /start",
+                parse_mode=ParseMode.HTML,
+            )
+        except Exception:
+            await message.answer("⚠️ Сайт agenda.sime.md временно недоступен. Попробуйте позже: /start")
         await state.clear()
     except Exception as err:
         _LOGGER.exception("Unexpected error during login for %s", username)
-        await status_msg.edit_text(
-            f"❌ Произошла непредвиденная ошибка: {err}\nПопробуйте снова: /start",
-            parse_mode="Markdown",
-        )
+        try:
+            await status_msg.edit_text(
+                f"❌ Произошла ошибка: {html.escape(str(err))}\nПопробуйте снова: /start",
+                parse_mode=ParseMode.HTML,
+            )
+        except Exception:
+            await message.answer(f"❌ Произошла ошибка: {err}\nПопробуйте снова: /start")
         await state.clear()
     finally:
         await client.close()

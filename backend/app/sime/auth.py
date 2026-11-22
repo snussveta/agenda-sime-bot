@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import asyncio
+import base64
 import json
 import logging
 import re
@@ -74,7 +74,10 @@ class SimeAuthManager:
 
         # Step 3: Fetch login modal dialog
         try:
-            async with session.get(dialog_url, headers=headers) as resp:
+            async with session.get(
+                dialog_url,
+                headers={**headers, "Referer": PUBLIC_PORTAL_URL},
+            ) as resp:
                 if resp.status != 200:
                     raise SimeConnectionError(f"Failed to open login dialog: HTTP {resp.status}")
                 dialog_html = await resp.text()
@@ -136,23 +139,40 @@ class SimeAuthManager:
         except Exception as err:
             raise SimeAuthError(f"Invalid JSON response during login: {err}") from err
 
-        # Process response redirect
-        redirect_url = resp_json.get("redirect", {}).get("url") if isinstance(resp_json, dict) else None
+        # Process redirect response
+        redirect_url = ""
+        if isinstance(resp_json, dict):
+            redirect_url = resp_json.get("redirectURL") or resp_json.get("redirect", {}).get("url") or ""
+
         if not redirect_url:
-            error_msg = "Invalid username or password"
-            if isinstance(resp_json, dict) and "message" in resp_json:
-                error_msg = resp_json["message"]
+            error_msg = resp_json.get("message", "Неверный логин или пароль") if isinstance(resp_json, dict) else "Неверный логин или пароль"
             raise SimeAuthError(error_msg)
 
+        # Check for invalid login notification
+        if "notification_msg=" in redirect_url or "login_desktop" in redirect_url and "main-page" not in redirect_url:
+            msg_match = re.search(r"notification_msg=([A-Za-z0-9+/=]+)", redirect_url)
+            if msg_match:
+                try:
+                    decoded = base64.b64decode(msg_match.group(1)).decode("utf-8", errors="ignore")
+                    if "Invalid" in decoded or "credent" in decoded.lower():
+                        raise SimeAuthError("Неверный логин или пароль")
+                except Exception:
+                    pass
+            raise SimeAuthError("Неверный логин или пароль")
+
+        # Success - extract session ID
         sess_match = re.search(r"[?&]session=([0-9]+)", redirect_url)
         if sess_match:
             self.session_id = sess_match.group(1)
         else:
             self.session_id = tokens["p_instance"]
 
-        if not redirect_url.startswith("http"):
-            redirect_url = urllib.parse.urljoin(BASE_URL, redirect_url)
+        # Clean redirect target
+        if "main-page" in redirect_url:
+            clean_url = f"{BASE_URL}/ords/r/agenda/main/main-page?session={self.session_id}"
+        else:
+            clean_url = f"{BASE_URL}/ords/r/agenda/main/main-page?session={self.session_id}"
 
-        self.portal_url = redirect_url
+        self.portal_url = clean_url
         self._authenticated = True
         return self.portal_url
