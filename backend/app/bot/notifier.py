@@ -6,13 +6,13 @@ import logging
 from datetime import datetime
 from aiogram import Bot
 
-from ...database import (
+from backend.app.database import (
     decrypt_password,
     get_all_active_users,
     toggle_notifications,
     update_cached_data,
 )
-from ...sime import SimeAccountRole, SimeAuthError, SimeClient
+from backend.app.sime import SimeAccountRole, SimeAuthError, SimeClient
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,7 +59,6 @@ async def check_user_updates(bot: Bot, user: dict) -> None:
 
 
 async def notify_diff(bot: Bot, telegram_id: int, old_data: dict, new_data: dict) -> None:
-    # 1. Compare recent grades
     old_grades = {(g["date_str"], g["subject"], float(g["grade"])) for g in old_data.get("recent_grades", [])}
     new_grades = new_data.get("recent_grades", [])
 
@@ -83,7 +82,6 @@ async def notify_diff(bot: Bot, telegram_id: int, old_data: dict, new_data: dict
             except Exception as err:
                 _LOGGER.error("Failed to send grade notification to %d: %s", telegram_id, err)
 
-    # 2. Compare homework
     old_hw = {(h.get("due_date_str", ""), h.get("subject", ""), h.get("description", "")) for h in old_data.get("homework", [])}
     new_hw = new_data.get("homework", [])
 
@@ -104,18 +102,16 @@ async def notify_diff(bot: Bot, telegram_id: int, old_data: dict, new_data: dict
 
 
 async def run_notification_loop(bot: Bot, interval_minutes: int = 20) -> None:
-    """Continuous background loop checking for updates during active daytime hours."""
     _LOGGER.info("Starting notification background worker (interval: %d min)", interval_minutes)
 
     while True:
         try:
             now = datetime.now()
-            # Run only between 07:30 and 20:30, Monday to Saturday
             if 7 <= now.hour <= 20 and now.weekday() <= 5:
                 users = await get_all_active_users()
                 for user in users:
                     await check_user_updates(bot, user)
-                    await asyncio.sleep(3)  # Delay between users to avoid load spikes
+                    await asyncio.sleep(3)
         except Exception as e:
             _LOGGER.exception("Error in notification worker loop: %s", e)
 

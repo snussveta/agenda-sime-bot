@@ -15,13 +15,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-# Load environment variables
 load_dotenv()
 
-from .api.routes import router as api_router
-from .bot.handlers import menu, start
-from .bot.notifier import run_notification_loop
-from .database import init_db
+from backend.app.api.routes import router as api_router
+from backend.app.bot.handlers import menu, start
+from backend.app.bot.notifier import run_notification_loop
+from backend.app.database import init_db
 
 logging.basicConfig(
     level=logging.INFO,
@@ -38,10 +37,8 @@ bot_instance: Bot | None = None
 async def lifespan(app: FastAPI):
     global bot_task, notifier_task, bot_instance
 
-    # 1. Initialize SQLite Database
     await init_db()
 
-    # 2. Setup Aiogram Bot if token is configured
     bot_token = os.getenv("BOT_TOKEN")
     if bot_token and bot_token != "YOUR_TELEGRAM_BOT_TOKEN_HERE":
         bot_instance = Bot(
@@ -60,7 +57,6 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    # Shutdown
     if notifier_task:
         notifier_task.cancel()
     if bot_task:
@@ -76,7 +72,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -85,13 +80,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include API routes
 app.include_router(api_router)
 
-# Mount Static Frontend
 dist_path = Path(__file__).parent.parent.parent / "frontend" / "dist"
 if not dist_path.exists():
-    # If inside docker container
     dist_path = Path("/app/frontend/dist")
 
 if dist_path.exists():

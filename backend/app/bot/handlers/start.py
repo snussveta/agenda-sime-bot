@@ -7,15 +7,15 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 
-from ...database import (
+from backend.app.database import (
     delete_user,
     encrypt_password,
     get_user,
     save_user,
     update_cached_data,
 )
-from ...sime import SimeAccountRole, SimeAuthError, SimeClient, SimeConnectionError
-from ..keyboards import get_cancel_keyboard, get_main_menu_keyboard, get_role_keyboard
+from backend.app.sime import SimeAccountRole, SimeAuthError, SimeClient, SimeConnectionError
+from backend.app.bot.keyboards import get_cancel_keyboard, get_main_menu_keyboard, get_role_keyboard
 
 _LOGGER = logging.getLogger(__name__)
 router = Router(name="start")
@@ -126,7 +126,6 @@ async def process_password(message: Message, state: FSMContext):
         student_data = await client.fetch_data()
         student = student_data.student
 
-        # Save to encrypted DB
         enc_pass = encrypt_password(password)
         await save_user(
             telegram_id=telegram_id,

@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -9,9 +10,6 @@ import aiosqlite
 
 _LOGGER = logging.getLogger(__name__)
 
-DB_PATH = Path(os.getenv("DATABASE_PATH", "./data/agenda.db") if "os" in globals() else "./data/agenda.db")
-
-import os
 DB_PATH = Path(os.getenv("DATABASE_PATH", "./data/agenda.db"))
 
 

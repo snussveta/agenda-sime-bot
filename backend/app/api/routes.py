@@ -5,8 +5,8 @@ import logging
 from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from ...database import decrypt_password, get_user, update_cached_data
-from ...sime import SimeAccountRole, SimeClient
+from backend.app.database import decrypt_password, get_user, update_cached_data
+from backend.app.sime import SimeAccountRole, SimeClient
 from .auth import get_current_telegram_user
 
 _LOGGER = logging.getLogger(__name__)

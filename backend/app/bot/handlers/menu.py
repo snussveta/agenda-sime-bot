@@ -7,15 +7,15 @@ from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message, ReplyKeyboardRemove
 
-from ...database import (
+from backend.app.database import (
     decrypt_password,
     delete_user,
     get_user,
     toggle_notifications,
     update_cached_data,
 )
-from ...sime import SimeAccountRole, SimeClient
-from ..keyboards import get_main_menu_keyboard, get_role_keyboard
+from backend.app.sime import SimeAccountRole, SimeClient
+from backend.app.bot.keyboards import get_main_menu_keyboard, get_role_keyboard
 
 _LOGGER = logging.getLogger(__name__)
 router = Router(name="menu")
@@ -33,7 +33,6 @@ async def get_or_refresh_data(telegram_id: int, force: bool = False):
         except Exception:
             pass
 
-    # Refresh from SIME
     username = user["username"]
     password = decrypt_password(user["encrypted_password"])
     role = SimeAccountRole(user["role"])
@@ -86,7 +85,6 @@ async def show_grades(message: Message):
         lines.append(f"• **{subj_name}**:{avg_str}{sem_str}\n  Оценки: `{grades_str}`")
 
     text = "\n".join(lines)
-    # Telegram message length limit is 4096
     if len(text) > 4000:
         for chunk in [text[i:i+3800] for i in range(0, len(text), 3800)]:
             await message.answer(chunk, parse_mode="Markdown")
@@ -143,7 +141,6 @@ async def show_timetable(message: Message):
         room = f", каб. {lesson['classroom']}" if lesson.get("classroom") else ""
         teacher = f" ({lesson['teacher']})" if lesson.get("teacher") else ""
 
-        # Format time if ISO
         time_display = start
         if "T" in start:
             parts = start.split("T")
