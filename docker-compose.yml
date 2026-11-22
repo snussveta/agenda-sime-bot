@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agenda_sime_app
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    networks:
+      - app-net
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: agenda_sime_caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    networks:
+      - app-net
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app-net:
+    driver: bridge
