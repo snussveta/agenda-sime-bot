@@ -8,7 +8,7 @@ import os
 import urllib.parse
 from typing import Optional
 from fastapi import Header, HTTPException, status
-from backend.app.database import get_all_active_users, get_user
+from backend.app.database import get_user
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,26 +59,33 @@ async def get_current_telegram_user(
     # 1. Strict Telegram HMAC validation if initData is provided
     if raw_data:
         try:
-            user = validate_init_data(raw_data, bot_token)
-            return user
+            tg_payload = validate_init_data(raw_data, bot_token)
+            uid = tg_payload.get("id")
+            if uid:
+                user_in_db = await get_user(int(uid))
+                if user_in_db:
+                    return {
+                        "id": int(uid),
+                        "first_name": user_in_db.get("student_name", tg_payload.get("first_name", "User")),
+                    }
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Вы еще не вошли в дневник. Пожалуйста, откройте бота @agenda_sime_bot и выполните вход через /start.",
+                )
+        except HTTPException:
+            raise
         except Exception as e:
-            _LOGGER.warning("Telegram initData HMAC validation error: %s", e)
+            _LOGGER.warning("Telegram initData validation error: %s", e)
 
-    # 2. Match by X-Telegram-User-Id if user is registered in DB
+    # 2. Match by X-Telegram-User-Id if user is registered in DB (fallback for webview/dev)
     if x_telegram_user_id and x_telegram_user_id.isdigit():
         uid = int(x_telegram_user_id)
         user_in_db = await get_user(uid)
         if user_in_db:
             return {"id": uid, "first_name": user_in_db.get("student_name", "User")}
 
-    # 3. Fallback: If only 1 user exists in DB, authenticate as that user
-    # Allows viewing in desktop browser or when client headers are dropped
-    users = await get_all_active_users()
-    if len(users) == 1:
-        u = users[0]
-        return {"id": u["telegram_id"], "first_name": u.get("student_name", "User")}
-
+    # Never fallback to another user's session!
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Authorization required. Please use /start in the Telegram bot.",
+        detail="Требуется авторизация через Telegram. Откройте дневник через кнопку в боте @agenda_sime_bot.",
     )

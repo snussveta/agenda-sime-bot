@@ -37,9 +37,13 @@ export default function App() {
   const loadAllData = async () => {
     setLoading(true);
     setError(null);
+    let authError = null;
     try {
       const [profRes, gradesRes, hwRes, ttRes] = await Promise.all([
-        fetchProfile().catch(() => null),
+        fetchProfile().catch((e) => {
+          authError = e.message;
+          return null;
+        }),
         fetchGrades().catch(() => null),
         fetchHomework().catch(() => null),
         fetchTimetable().catch(() => null),
@@ -51,10 +55,10 @@ export default function App() {
       if (ttRes?.timetable) setTimetable(ttRes.timetable);
 
       if (!profRes && !gradesRes) {
-        setError('Не удалось загрузить данные. Убедитесь, что вы авторизовались через бота /start.');
+        setError(authError || 'Не удалось загрузить данные. Убедитесь, что вы авторизовались через бота /start.');
       }
     } catch (err) {
-      setError('Ошибка соединения с сервером.');
+      setError(authError || 'Ошибка соединения с сервером.');
     } finally {
       setLoading(false);
     }
@@ -96,12 +100,22 @@ export default function App() {
         <p className="text-xs text-slate-500 dark:text-zinc-400 mb-6 max-w-xs">
           {error}
         </p>
-        <button
-          onClick={loadAllData}
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all active:scale-95"
-        >
-          Повторить попытку
-        </button>
+        <div className="flex flex-col gap-2 w-full max-w-xs">
+          <button
+            onClick={loadAllData}
+            className="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all active:scale-95"
+          >
+            Повторить попытку
+          </button>
+          <a
+            href="https://t.me/agenda_sime_bot"
+            target="_blank"
+            rel="noreferrer"
+            className="w-full px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-200 rounded-xl text-xs font-semibold transition-all text-center"
+          >
+            Войти через бота @agenda_sime_bot →
+          </a>
+        </div>
       </div>
     );
   }

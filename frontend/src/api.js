@@ -17,34 +17,45 @@ export function getHeaders() {
   };
 }
 
+async function handleResponse(res) {
+  if (!res.ok) {
+    let msg = 'Ошибка загрузки данных';
+    try {
+      const data = await res.json();
+      if (data?.detail) msg = data.detail;
+    } catch {
+      try {
+        msg = await res.text();
+      } catch {}
+    }
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
 export async function fetchProfile() {
   const res = await fetch('/api/me', { headers: getHeaders() });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return handleResponse(res);
 }
 
 export async function fetchGrades() {
   const res = await fetch('/api/grades', { headers: getHeaders() });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return handleResponse(res);
 }
 
 export async function fetchHomework() {
   const res = await fetch('/api/homework', { headers: getHeaders() });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return handleResponse(res);
 }
 
 export async function fetchTimetable() {
   const res = await fetch('/api/timetable', { headers: getHeaders() });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return handleResponse(res);
 }
 
 export async function syncData() {
   const res = await fetch('/api/sync', { method: 'POST', headers: getHeaders() });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  return handleResponse(res);
 }
 
 export function triggerHaptic(type = 'light') {
