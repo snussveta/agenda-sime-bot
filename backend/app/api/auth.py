@@ -8,7 +8,7 @@ import os
 import urllib.parse
 from typing import Optional
 from fastapi import Header, HTTPException, status
-from backend.app.database import get_user
+from backend.app.database import get_user, verify_user_auth_token
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,6 +46,7 @@ async def get_current_telegram_user(
     authorization: Optional[str] = Header(None, alias="Authorization"),
     x_telegram_init_data: Optional[str] = Header(None, alias="X-Telegram-Init-Data"),
     x_telegram_user_id: Optional[str] = Header(None, alias="X-Telegram-User-Id"),
+    x_telegram_auth_token: Optional[str] = Header(None, alias="X-Telegram-Auth-Token"),
 ) -> dict:
     bot_token = os.getenv("BOT_TOKEN", "").strip().strip('"').strip("'")
 
@@ -72,12 +73,26 @@ async def get_current_telegram_user(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Вы еще не вошли в дневник. Пожалуйста, откройте бота @agenda_sime_bot и выполните вход через /start.",
                 )
-        except HTTPException:
-            raise
+        except HTTPException as http_err:
+            if "Вы еще не вошли" in getattr(http_err, "detail", ""):
+                raise
+            _LOGGER.warning("Telegram initData validation error: %s", getattr(http_err, "detail", http_err))
         except Exception as e:
             _LOGGER.warning("Telegram initData validation error: %s", e)
 
-    # 2. Match by X-Telegram-User-Id if user is registered in DB (fallback for webview/dev)
+    # 2. Signed Bot Token validation (used when opened via Reply Keyboard or URL params)
+    if x_telegram_user_id and x_telegram_user_id.isdigit() and x_telegram_auth_token:
+        uid = int(x_telegram_user_id)
+        if verify_user_auth_token(uid, x_telegram_auth_token):
+            user_in_db = await get_user(uid)
+            if user_in_db:
+                return {"id": uid, "first_name": user_in_db.get("student_name", "User")}
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Вы еще не вошли в дневник. Пожалуйста, откройте бота @agenda_sime_bot и выполните вход через /start.",
+            )
+
+    # 3. Match by X-Telegram-User-Id if user is registered in DB (fallback for Telegram WebView)
     if x_telegram_user_id and x_telegram_user_id.isdigit():
         uid = int(x_telegram_user_id)
         user_in_db = await get_user(uid)

@@ -9,6 +9,19 @@ from aiogram.types import (
     WebAppInfo,
 )
 
+from backend.app.database import generate_user_auth_token
+
+
+def build_web_app_url(telegram_id: int | None = None, base_url: str | None = None) -> str:
+    raw_url = base_url or os.getenv("MINI_APP_URL", "")
+    if not raw_url:
+        return ""
+    if not telegram_id:
+        return raw_url
+    token = generate_user_auth_token(telegram_id)
+    sep = "&" if "?" in raw_url else "?"
+    return f"{raw_url}{sep}uid={telegram_id}&token={token}"
+
 
 def get_role_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
@@ -24,8 +37,17 @@ def get_role_keyboard() -> InlineKeyboardMarkup:
     )
 
 
-def get_main_menu_keyboard(mini_app_url: str | None = None) -> ReplyKeyboardMarkup:
-    url = mini_app_url or os.getenv("MINI_APP_URL", "")
+def get_open_diary_inline_keyboard(telegram_id: int, mini_app_url: str | None = None) -> InlineKeyboardMarkup:
+    url = build_web_app_url(telegram_id, mini_app_url)
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="📱 Открыть дневник", web_app=WebAppInfo(url=url))]
+        ]
+    )
+
+
+def get_main_menu_keyboard(telegram_id: int | None = None, mini_app_url: str | None = None) -> ReplyKeyboardMarkup:
+    url = build_web_app_url(telegram_id, mini_app_url)
     
     rows = []
     if url:

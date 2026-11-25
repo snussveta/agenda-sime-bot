@@ -1,3 +1,4 @@
+
 """FastAPI routes for Telegram Mini App."""
 
 import json

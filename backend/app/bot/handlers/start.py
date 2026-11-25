@@ -17,7 +17,12 @@ from backend.app.database import (
     update_cached_data,
 )
 from backend.app.sime import SimeAccountRole, SimeAuthError, SimeClient, SimeConnectionError
-from backend.app.bot.keyboards import get_cancel_keyboard, get_main_menu_keyboard, get_role_keyboard
+from backend.app.bot.keyboards import (
+    get_cancel_keyboard,
+    get_main_menu_keyboard,
+    get_open_diary_inline_keyboard,
+    get_role_keyboard,
+)
 
 _LOGGER = logging.getLogger(__name__)
 router = Router(name="start")
@@ -43,7 +48,7 @@ async def cmd_start(message: Message, state: FSMContext):
             f"👋 С возвращением, <b>{name}</b>!\n"
             f"🏫 {school} ({classroom})\n\n"
             f"Используйте кнопки меню ниже для просмотра оценок, расписания или откройте интерактивный дневник:",
-            reply_markup=get_main_menu_keyboard(),
+            reply_markup=get_main_menu_keyboard(telegram_id),
             parse_mode=ParseMode.HTML,
         )
         return
@@ -159,7 +164,7 @@ async def process_password(message: Message, state: FSMContext):
             f"{avg_text}\n"
             f"🔔 Уведомления о новых оценках: <b>Включены</b>\n\n"
             f"Теперь вы можете открыть дневник кнопкой ниже или использовать быстрое меню:",
-            reply_markup=get_main_menu_keyboard(),
+            reply_markup=get_main_menu_keyboard(telegram_id),
             parse_mode=ParseMode.HTML,
         )
 
